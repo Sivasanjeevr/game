@@ -26,9 +26,9 @@ Blockly.Colours = {
   // SVG colours: these must be specificed in #RRGGBB style
   // To add an opacity, this must be specified as a separate property (for SVG fill-opacity)
   "motion": {
-    "primary": "#4C97FF",
-    "secondary": "#4280D7",
-    "tertiary": "#3373CC"
+    "primary": "#FF8C42",
+    "secondary": "#FF7A2E",
+    "tertiary": "#E67E3A"
   },
   "looks": {
     "primary": "#9966FF",
@@ -84,8 +84,8 @@ Blockly.Colours = {
   },
   "text": "#575E75",
   "workspace": "#F9F9F9",
-  "toolboxHover": "#4C97FF",
-  "toolboxSelected": "#e9eef2",
+  "toolboxHover": "#FF8C42",
+  "toolboxSelected": "#FEF6ED",
   "toolboxText": "#575E75",
   "toolbox": "#FFFFFF",
   "flyout": "#F9F9F9",
