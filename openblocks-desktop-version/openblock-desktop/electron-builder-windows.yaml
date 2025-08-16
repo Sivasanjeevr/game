@@ -1,0 +1,34 @@
+directories:
+  buildResources: buildResources
+  output: dist
+extraFiles: ['LICENSE', 'LICENSE.ScratchFoundation', 'TRADEMARK', "tools", "external-resources", 'firmwares', "drivers"]
+
+appId: openblock.cc.openblock-desktop
+productName: "OpenBlockDesktop"
+publish:
+  - provider: github
+artifactName: "OpenBlock-Desktop_v${version}_${os}_${arch}.${ext}"
+
+fileAssociations:
+  ext: ob
+  name: OpenBlock project file
+  role: Editor
+  icon: buildResources/OpenBlockDesktop.ico
+
+compression: maximum
+
+win:
+  icon: buildResources/OpenBlockDesktop.ico
+  target:
+    - nsis
+    - portable
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  include: buildResources/installer.nsh
+  buildUniversalInstaller: false
+
+# Force Windows builds only
+platforms:
+  - win32
+
