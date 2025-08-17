@@ -82,124 +82,139 @@ const HorizontalLayout = ({
 
     return (
         <div className={styles.horizontalLayout}>
-            {/* This is the EXACT same UI structure as old learners (age 7+) */}
-            <Box className={styles.flexWrapper}>
-                <Box className={styles.editorWrapper}>
-                    <Tabs
-                        forceRenderTabPanel
-                        className={tabClassNames.tabs}
-                        selectedIndex={defaultProps.activeTabIndex}
-                        selectedTabClassName={tabClassNames.tabSelected}
-                        selectedTabPanelClassName={tabClassNames.tabPanelSelected}
-                        onSelect={defaultProps.onActivateTab}
-                    >
-                        <TabList className={tabClassNames.tabList}>
-                            <Tab className={tabClassNames.tab}>
-                                <img
-                                    draggable={false}
-                                    src={require('../gui/icon--code.svg')}
-                                />
-                                Code
-                            </Tab>
-                            <Tab
-                                className={classNames(tabClassNames.tab,
-                                    defaultProps.isRealtimeMode ? styles.hideCustomAndSoundTab :
-                                        styles.showCustomAndSoundTab)}
-                                onClick={defaultProps.onActivateCostumesTab}
-                            >
-                                <img
-                                    draggable={false}
-                                    src={require('../gui/icon--costumes.svg')}
-                                />
-                                {defaultProps.targetIsStage ? 'Backdrops' : 'Costumes'}
-                            </Tab>
-                            <Tab
-                                className={classNames(tabClassNames.tab,
-                                    defaultProps.isRealtimeMode ? styles.hideCustomAndSoundTab :
-                                        styles.showCustomAndSoundTab)}
-                                onClick={defaultProps.onActivateSoundsTab}
-                            >
-                                <img
-                                    draggable={false}
-                                    src={require('../gui/icon--sounds.svg')}
-                                />
-                                Sounds
-                            </Tab>
-                        </TabList>
-                        <TabPanel className={tabClassNames.tabPanel}>
-                            <Box className={styles.blocksWrapper}>
-                                <Blocks
-                                    canUseCloud={defaultProps.canUseCloud}
-                                    grow={1}
-                                    isVisible={defaultProps.blocksTabVisible}
-                                    options={{
-                                        media: `${defaultProps.basePath}static/blocks-media/`
-                                    }}
-                                    stageSize={defaultProps.stageSize}
-                                    vm={defaultProps.vm}
-                                    onShowMessageBox={defaultProps.onShowMessageBox}
-                                />
-                            </Box>
-                            <Box className={styles.extensionButtonContainer}>
-                                <button
-                                    className={styles.extensionButton}
-                                    title="Add Extension"
-                                    onClick={defaultProps.onExtensionButtonClick}
+            {/* Menu Bar would be here - handled by parent */}
+            
+            {/* Main Content Area - PictoBlox-style Layout for Age 4+ */}
+            <Box className={styles.bodyWrapper}>
+                <Box className={styles.flexWrapper}>
+                    {/* Left Side - Large Coding Area */}
+                    <Box className={styles.codingAreaWrapper}>
+                        <Tabs
+                            forceRenderTabPanel
+                            className={tabClassNames.tabs}
+                            selectedIndex={defaultProps.activeTabIndex}
+                            selectedTabClassName={tabClassNames.tabSelected}
+                            selectedTabPanelClassName={tabClassNames.tabPanelSelected}
+                            onSelect={defaultProps.onActivateTab}
+                        >
+                            {/* Horizontal Tab List at Top */}
+                            <TabList className={tabClassNames.tabList}>
+                                <Tab className={tabClassNames.tab}>
+                                    <img
+                                        draggable={false}
+                                        src={require('../gui/icon--code.svg')}
+                                    />
+                                    <span className={styles.tabText}>Code</span>
+                                </Tab>
+                                <Tab
+                                    className={tabClassNames.tab}
+                                    onClick={defaultProps.onActivateCostumesTab}
                                 >
                                     <img
-                                        className={styles.extensionButtonIcon}
                                         draggable={false}
-                                        src={require('../gui/icon--extensions.svg')}
+                                        src={require('../gui/icon--costumes.svg')}
                                     />
-                                </button>
-                            </Box>
-                            <Box className={styles.watermark}>
-                                <Watermark />
-                            </Box>
-                        </TabPanel>
-                        <TabPanel className={tabClassNames.tabPanel}>
-                            {defaultProps.costumesTabVisible ? <CostumeTab vm={defaultProps.vm} /> : null}
-                        </TabPanel>
-                        <TabPanel className={tabClassNames.tabPanel}>
-                            {defaultProps.soundsTabVisible ? <SoundTab
-                                vm={defaultProps.vm}
-                                onShowMessageBox={defaultProps.onShowMessageBox}
-                            /> : null}
-                        </TabPanel>
-                    </Tabs>
-                </Box>
-                <Box
-                    className={classNames(styles.stageAndTargetWrapper, styles[defaultProps.stageSize],
-                        defaultProps.isRealtimeMode ? styles.showStage : styles.hideStage)}
-                >
-                    <StageWrapper
-                        isFullScreen={defaultProps.isFullScreen}
-                        isRendererSupported={defaultProps.isRendererSupported}
-                        isRtl={defaultProps.isRtl}
-                        stageSize={defaultProps.stageSize}
-                        vm={defaultProps.vm}
-                    />
-                    <Box className={styles.targetWrapper}>
-                        <TargetPane
+                                    <span className={styles.tabText}>
+                                        {defaultProps.targetIsStage ? 'Backdrops' : 'Costumes'}
+                                    </span>
+                                </Tab>
+                                <Tab
+                                    className={tabClassNames.tab}
+                                    onClick={defaultProps.onActivateSoundsTab}
+                                >
+                                    <img
+                                        draggable={false}
+                                        src={require('../gui/icon--sounds.svg')}
+                                    />
+                                    <span className={styles.tabText}>Sounds</span>
+                                </Tab>
+                            </TabList>
+
+                            {/* Code Tab Panel */}
+                            <TabPanel className={tabClassNames.tabPanel}>
+                                <Box className={styles.blocksWrapper}>
+                                    <Blocks
+                                        canUseCloud={defaultProps.canUseCloud}
+                                        grow={1}
+                                        isVisible={defaultProps.blocksTabVisible}
+                                        options={{
+                                            media: `${defaultProps.basePath}static/blocks-media/`
+                                        }}
+                                        stageSize={defaultProps.stageSize}
+                                        vm={defaultProps.vm}
+                                        onShowMessageBox={defaultProps.onShowMessageBox}
+                                    />
+                                </Box>
+                                <Box className={styles.extensionButtonContainer}>
+                                    <button
+                                        className={styles.extensionButton}
+                                        title="Add Extension"
+                                        onClick={defaultProps.onExtensionButtonClick}
+                                    >
+                                        <img
+                                            className={styles.extensionButtonIcon}
+                                            draggable={false}
+                                            src={require('../gui/icon--extensions.svg')}
+                                        />
+                                    </button>
+                                </Box>
+                                <Box className={styles.watermark}>
+                                    <Watermark />
+                                </Box>
+                            </TabPanel>
+
+                            {/* Costumes Tab Panel */}
+                            <TabPanel className={tabClassNames.tabPanel}>
+                                {defaultProps.costumesTabVisible ? <CostumeTab vm={defaultProps.vm} /> : null}
+                            </TabPanel>
+
+                            {/* Sounds Tab Panel */}
+                            <TabPanel className={tabClassNames.tabPanel}>
+                                {defaultProps.soundsTabVisible ? <SoundTab
+                                    vm={defaultProps.vm}
+                                    onShowMessageBox={defaultProps.onShowMessageBox}
+                                /> : null}
+                            </TabPanel>
+                        </Tabs>
+                    </Box>
+
+                    {/* Right Side - Stage and Target */}
+                    <Box className={styles.stageAndTargetWrapper}>
+                        <StageWrapper
+                            isFullScreen={defaultProps.isFullScreen}
+                            isRendererSupported={defaultProps.isRendererSupported}
+                            isRtl={defaultProps.isRtl}
                             stageSize={defaultProps.stageSize}
                             vm={defaultProps.vm}
                         />
+                        <Box className={styles.targetWrapper}>
+                            <TargetPane
+                                stageSize={defaultProps.stageSize}
+                                vm={defaultProps.vm}
+                            />
+                        </Box>
                     </Box>
                 </Box>
+
+                {/* Hardware Section */}
                 {((defaultProps.isRealtimeMode === false) && (defaultProps.stageSizeMode !== 'hide')) ? (
                     <Hardware
                         vm={defaultProps.vm}
                         stageSize={defaultProps.stageSize}
                     />
                 ) : null}
+
+                {/* Drag Layer */}
+                <DragLayer />
+
+                {/* Hardware Header */}
+                {(defaultProps.isRealtimeMode === false) ? (
+                    <HardwareHeader
+                        vm={defaultProps.vm}
+                        stageSize={defaultProps.stageSize}
+                    />
+                ) : null}
             </Box>
-            <DragLayer />
-            {(defaultProps.isRealtimeMode === false) ? (
-                <HardwareHeader
-                    vm={defaultProps.vm}
-                    stageSize={defaultProps.stageSize}
-                />
-            ) : null}
         </div>
     );
 };

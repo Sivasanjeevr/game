@@ -1,0 +1,455 @@
+/* Import the main GUI styles to match old learner interface */
+@import "../../css/colors.css";
+@import "../../css/units.css";
+@import "../../css/z-index.css";
+
+/* ========================================
+   PICTOBLOX-STYLE LAYOUT FOR AGE 4+ (YOUNG LEARNERS)
+   ======================================== */
+
+/* Main Container */
+.horizontalLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    background-color: $ui-white;
+    overflow: hidden; /* Prevent any overflow */
+}
+
+/* Body Wrapper */
+.bodyWrapper {
+    position: relative;
+    height: calc(100% - $menu-bar-height);
+    background-color: $ui-primary;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Flex Wrapper - Main content area */
+.flexWrapper {
+    display: flex;
+    flex-direction: row; /* Horizontal layout */
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ========================================
+   LEFT SIDE - LARGE CODING AREA (PICTOBLOX STYLE)
+   ======================================== */
+
+/* Coding Area Wrapper - Left side with large space for blocks */
+.codingAreaWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Take most of the space */
+    min-width: 0; /* Allow shrinking */
+    background-color: $ui-white;
+    overflow: hidden;
+    border-right: 1px solid $ui-tertiary;
+}
+
+/* ========================================
+   RIGHT SIDE - STAGE AND TARGET (PICTOBLOX STYLE)
+   ======================================== */
+
+/* Stage and Target Wrapper - Right side */
+.stageAndTargetWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Don't shrink */
+    background-color: $ui-white;
+    min-width: 400px; /* Minimum width for stage */
+    max-width: 500px; /* Maximum width for stage */
+}
+
+/* Target Wrapper - Bottom section of stage area */
+.targetWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: $ui-white;
+    border-top: 1px solid $ui-tertiary;
+    min-height: 120px; /* Minimum height for target pane */
+}
+
+/* ========================================
+   HORIZONTAL TABS SYSTEM (AT TOP)
+   ======================================== */
+
+/* Tabs Container */
+.tabs {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Tab List - Horizontal row of tabs at top - More specific to override main GUI styles */
+.horizontalLayout .tabList,
+.horizontalLayout .tabs .tabList {
+    display: flex !important;
+    flex-direction: row !important; /* Force horizontal tabs */
+    flex-shrink: 0;
+    background-color: $ui-white;
+    border-bottom: 1px solid $ui-tertiary;
+    height: 50px; /* Reduced height for more compact horizontal tabs */
+    overflow-x: auto; /* Horizontal scroll if needed */
+    overflow-y: hidden;
+}
+
+/* Individual Tab - More specific to override main GUI styles */
+.horizontalLayout .tab,
+.horizontalLayout .tabList .tab {
+    display: flex !important;
+    flex-direction: row !important; /* Force horizontal layout for icon and text */
+    align-items: center;
+    justify-content: center;
+    min-width: 120px; /* Minimum tab width */
+    max-width: 150px; /* Maximum tab width */
+    height: 100%;
+    padding: 8px 16px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background-color: transparent;
+    color: $ui-tertiary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.8rem; /* Slightly larger font for better readability */
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    gap: 8px; /* Space between icon and text */
+}
+
+.horizontalLayout .tab:hover,
+.horizontalLayout .tabList .tab:hover {
+    background-color: $ui-primary;
+    color: $motion-primary;
+}
+
+.horizontalLayout .tab.isSelected,
+.horizontalLayout .tabList .tab.isSelected {
+    border-bottom-color: $motion-primary;
+    color: $motion-primary;
+    background-color: $ui-primary;
+}
+
+/* Tab Icon - More specific to override main GUI styles */
+.horizontalLayout .tab img,
+.horizontalLayout .tabList .tab img {
+    width: 20px !important;
+    height: 20px !important;
+    opacity: 0.8;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    margin: 0 !important; /* Override main GUI margins */
+    filter: none !important; /* Override grayscale filter */
+}
+
+.horizontalLayout .tab.isSelected img,
+.horizontalLayout .tabList .tab.isSelected img {
+    opacity: 1;
+}
+
+/* Tab Text - More specific to override main GUI styles */
+.horizontalLayout .tabText,
+.horizontalLayout .tab .tabText {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+    flex-shrink: 0; /* Prevent text from shrinking */
+}
+
+/* ========================================
+   TAB PANELS
+   ======================================== */
+
+/* Tab Panel */
+.tabPanel {
+    display: none;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tabPanel.isSelected {
+    display: flex;
+}
+
+/* ========================================
+   BLOCKS AREA (LARGE CODING SPACE)
+   ======================================== */
+
+/* Blocks Wrapper - Large area for block programming */
+.blocksWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    background-color: $ui-white;
+}
+
+/* ========================================
+   EXTENSION BUTTON
+   ======================================== */
+
+/* Extension Button Container */
+.extensionButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: $space;
+    border-top: 1px solid $ui-tertiary;
+    background-color: $ui-white;
+    flex-shrink: 0;
+}
+
+.extensionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: $form-radius;
+    background-color: $motion-primary;
+    color: $ui-white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.extensionButton:hover {
+    background-color: $motion-tertiary;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.extensionButtonIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    filter: brightness(0) invert(1); /* Make icon white */
+}
+
+/* ========================================
+   WATERMARK
+   ======================================== */
+
+/* Watermark */
+.watermark {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: $space;
+    border-top: 1px solid $ui-tertiary;
+    background-color: $ui-white;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   HIDE/SHOW TABS BASED ON REALTIME MODE
+   ======================================== */
+
+/* For Age 4+, we always show all tabs */
+.hideCustomAndSoundTab {
+    display: flex !important; /* Force display for Age 4+ */
+}
+
+.showCustomAndSoundTab {
+    display: flex !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet and smaller screens */
+@media (max-width: 1024px) {
+    .stageAndTargetWrapper {
+        min-width: 350px;
+        max-width: 400px;
+    }
+    
+    .tab {
+        min-width: 100px;
+        max-width: 120px;
+        padding: 6px 12px;
+    }
+    
+    .tabText {
+        font-size: 0.65rem;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    .flexWrapper {
+        flex-direction: column; /* Stack vertically on mobile */
+    }
+    
+    .stageAndTargetWrapper {
+        min-width: 100%;
+        max-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid $ui-tertiary;
+        min-height: 300px;
+    }
+    
+    .targetWrapper {
+        min-height: 100px;
+    }
+    
+    .tabList {
+        height: 45px; /* Slightly smaller on mobile but still horizontal */
+        overflow-x: auto;
+    }
+    
+    .tab {
+        min-width: 100px;
+        max-width: 120px;
+        padding: 6px 12px;
+        font-size: 0.75rem; /* Smaller font on mobile */
+    }
+    
+    .tab img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .tabText {
+        font-size: 0.7rem;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .tab {
+        min-width: 80px;
+        max-width: 100px;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .tab img {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .tabText {
+        font-size: 0.65rem;
+    }
+    
+    .extensionButton {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    .extensionButtonIcon {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+/* ========================================
+   HORIZONTAL SCROLLING FOR TABS
+   ======================================== */
+
+/* Custom scrollbar for horizontal tabs */
+.tabList::-webkit-scrollbar {
+    height: 4px;
+}
+
+.tabList::-webkit-scrollbar-track {
+    background: $ui-tertiary;
+    border-radius: 2px;
+}
+
+.tabList::-webkit-scrollbar-thumb {
+    background: $motion-primary;
+    border-radius: 2px;
+}
+
+.tabList::-webkit-scrollbar-thumb:hover {
+    background: $motion-tertiary;
+}
+
+/* Firefox scrollbar */
+.tabList {
+    scrollbar-width: thin;
+    scrollbar-color: $motion-primary $ui-tertiary;
+}
+
+/* ========================================
+   ANIMATIONS AND TRANSITIONS
+   ======================================== */
+
+/* Smooth transitions for all interactive elements */
+.tab,
+.extensionButton,
+.stageAndTargetWrapper,
+.codingAreaWrapper {
+    transition: all 0.2s ease;
+}
+
+/* Hover effects */
+.tab:hover {
+    transform: translateY(-1px);
+}
+
+.extensionButton:hover {
+    transform: translateY(-1px);
+}
+
+/* ========================================
+   ACCESSIBILITY IMPROVEMENTS
+   ======================================== */
+
+/* Focus states for keyboard navigation */
+.tab:focus,
+.extensionButton:focus {
+    outline: 2px solid $motion-primary;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .tab {
+        border: 1px solid $ui-tertiary;
+    }
+    
+    .tab.isSelected {
+        border: 2px solid $motion-primary;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+    .horizontalLayout {
+        display: block;
+        height: auto;
+    }
+    
+    .tabList,
+    .extensionButtonContainer,
+    .watermark {
+        display: none;
+    }
+    
+    .blocksWrapper {
+        display: block;
+        height: auto;
+    }
+}
