@@ -1,0 +1,11 @@
+.mainApp {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.verticalLayout {
+    width: 100%;
+    height: 100%;
+    /* This will contain the existing vertical GUI */
+}

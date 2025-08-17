@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
 import MediaQuery from 'react-responsive';
@@ -9,6 +9,11 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'openblock-vm';
 import Renderer from 'scratch-render';
+
+// Import age-based system components
+import AgeSelectionPopup from '../../components/age-selection-popup/age-selection-popup.jsx';
+import HorizontalLayout from '../../components/horizontal-layout/horizontal-layout.jsx';
+import ageManager from '../../lib/age-manager.js';
 
 import Blocks from '../../containers/blocks.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
@@ -137,6 +142,36 @@ const GUIComponent = props => {
         isRealtimeMode,
         ...componentProps
     } = omit(props, 'dispatch');
+
+    // Age-based system state management
+    const [showAgePopup, setShowAgePopup] = useState(false);
+    const [currentAge, setCurrentAge] = useState(ageManager.getCurrentAge());
+
+    useEffect(() => {
+        // Check if age is already selected
+        if (!ageManager.hasAgeSelected()) {
+            setShowAgePopup(true);
+        }
+
+        // Listen for age changes
+        const handleAgeChange = (newAge) => {
+            setCurrentAge(newAge);
+            setShowAgePopup(false);
+        };
+
+        ageManager.addListener(handleAgeChange);
+
+        return () => {
+            ageManager.removeListener(handleAgeChange);
+        };
+    }, []);
+
+    const handleAgeSelect = (ageGroup) => {
+        ageManager.setAge(ageGroup);
+        setCurrentAge(ageGroup);
+        setShowAgePopup(false);
+    };
+
     if (children) {
         return <Box {...componentProps}>{children}</Box>;
     }
@@ -190,6 +225,12 @@ const GUIComponent = props => {
                         onShowPrivacyPolicy={onShowPrivacyPolicy}
                     />
                 ) : null}
+                
+                {/* Age Selection Popup */}
+                {showAgePopup && (
+                    <AgeSelectionPopup onAgeSelect={handleAgeSelect} />
+                )}
+                
                 {loading ? (
                     <Loader />
                 ) : null}
@@ -276,9 +317,63 @@ const GUIComponent = props => {
                     onClickClearCache={onClickClearCache}
                     onClickInstallDriver={onClickInstallDriver}
                 />
+                
+                {/* Age Indicator */}
+                {currentAge && (
+                    <div style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: '2px solid #FF8C42',
+                        borderRadius: '25px',
+                        padding: '12px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        zIndex: 1000,
+                        boxShadow: '0 8px 24px rgba(255, 140, 66, 0.2)',
+                        fontSize: '0.9rem',
+                        fontWeight: '600'
+                    }}>
+                        <span style={{color: '#6B5B4A'}}>
+                            Age Group: {currentAge}
+                        </span>
+                        <button 
+                            onClick={() => setShowAgePopup(true)}
+                            style={{
+                                background: 'linear-gradient(135deg, #FF8C42, #FF7A2E)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '20px',
+                                padding: '6px 16px',
+                                fontSize: '0.8rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'translateY(-2px)';
+                                e.target.style.boxShadow = '0 6px 16px rgba(255, 140, 66, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'translateY(0)';
+                                e.target.style.boxShadow = '0 4px 12px rgba(255, 140, 66, 0.3)';
+                            }}
+                        >
+                            Change
+                        </button>
+                    </div>
+                )}
+                
                 <Box className={styles.bodyWrapper}>
-                    <Box className={styles.flexWrapper}>
-                        <Box className={styles.editorWrapper}>
+                    {/* Age-based Layout Wrapper */}
+                    {currentAge && ageManager.isYoungLearner() ? (
+                        // Age 4+ - Horizontal Layout
+                        <HorizontalLayout>
+                            <Box className={styles.flexWrapper}>
+                                <Box className={styles.editorWrapper}>
                             <Tabs
                                 forceRenderTabPanel
                                 className={tabClassNames.tabs}
@@ -412,6 +507,147 @@ const GUIComponent = props => {
                             />) : null
                         }
                     </Box>
+                    <DragLayer />
+                    {(isRealtimeMode === false) ? (
+                        <HardwareHeader
+                            vm={vm}
+                            stageSize={stageSize}
+                        />) : null
+                    }
+                        </HorizontalLayout>
+                    ) : (
+                        // Age 7+ - Vertical Layout (existing GUI)
+                        <Box className={styles.flexWrapper}>
+                            <Box className={styles.editorWrapper}>
+                                <Tabs
+                                    forceRenderTabPanel
+                                    className={tabClassNames.tabs}
+                                    selectedIndex={activeTabIndex}
+                                    selectedTabClassName={tabClassNames.tabSelected}
+                                    selectedTabPanelClassName={tabClassNames.tabPanelSelected}
+                                    onSelect={onActivateTab}
+                                >
+                                    <TabList className={tabClassNames.tabList}>
+                                        <Tab className={tabClassNames.tab}>
+                                            <img
+                                                draggable={false}
+                                                src={codeIcon}
+                                            />
+                                            <FormattedMessage
+                                                defaultMessage="Code"
+                                                description="Button to get to the code panel"
+                                                id="gui.gui.codeTab"
+                                            />
+                                        </Tab>
+                                        <Tab
+                                            className={classNames(tabClassNames.tab,
+                                                isRealtimeMode ? styles.hideCustomAndSoundTab :
+                                                    styles.showCustomAndSoundTab)}
+                                            onClick={onActivateCostumesTab}
+                                        >
+                                            <img
+                                                draggable={false}
+                                                src={costumesIcon}
+                                            />
+                                            {targetIsStage ? (
+                                                <FormattedMessage
+                                                    defaultMessage="Backdrops"
+                                                    description="Button to get to the backdrops panel"
+                                                    id="gui.gui.backdropsTab"
+                                                />
+                                            ) : (
+                                                <FormattedMessage
+                                                    defaultMessage="Costumes"
+                                                    description="Button to get to the costumes panel"
+                                                    id="gui.gui.costumesTab"
+                                                />
+                                            )}
+                                        </Tab>
+                                        <Tab
+                                            className={classNames(tabClassNames.tab,
+                                                isRealtimeMode ? styles.hideCustomAndSoundTab :
+                                                    styles.showCustomAndSoundTab)}
+                                            onClick={onActivateSoundsTab}
+                                        >
+                                            <img
+                                                draggable={false}
+                                                src={soundsIcon}
+                                            />
+                                            <FormattedMessage
+                                                defaultMessage="Sounds"
+                                                description="Button to get to the sounds panel"
+                                                id="gui.gui.soundsTab"
+                                            />
+                                        </Tab>
+                                    </TabList>
+                                    <TabPanel className={tabClassNames.tabPanel}>
+                                        <Box className={styles.blocksWrapper}>
+                                            <Blocks
+                                                canUseCloud={canUseCloud}
+                                                grow={1}
+                                                isVisible={blocksTabVisible}
+                                                options={{
+                                                    media: `${basePath}static/blocks-media/`
+                                                }}
+                                                stageSize={stageSize}
+                                                vm={vm}
+                                                onShowMessageBox={onShowMessageBox}
+                                            />
+                                        </Box>
+                                        <Box className={styles.extensionButtonContainer}>
+                                            <button
+                                                className={styles.extensionButton}
+                                                title={intl.formatMessage(messages.addExtension)}
+                                                onClick={onExtensionButtonClick}
+                                            >
+                                                <img
+                                                className={styles.extensionButtonIcon}
+                                                draggable={false}
+                                                src={addExtensionIcon}
+                                            />
+                                            </button>
+                                        </Box>
+                                        <Box className={styles.watermark}>
+                                            <Watermark />
+                                        </Box>
+                                    </TabPanel>
+                                    <TabPanel className={tabClassNames.tabPanel}>
+                                        {costumesTabVisible ? <CostumeTab vm={vm} /> : null}
+                                    </TabPanel>
+                                    <TabPanel className={tabClassNames.tabPanel}>
+                                        {soundsTabVisible ? <SoundTab
+                                            vm={vm}
+                                            onShowMessageBox={onShowMessageBox}
+                                        /> : null}
+                                    </TabPanel>
+                                </Tabs>
+                            </Box>
+                            <Box
+                                className={classNames(styles.stageAndTargetWrapper, styles[stageSize],
+                                    isRealtimeMode ? styles.showStage : styles.hideStage)}
+                            >
+                                <StageWrapper
+                                    isFullScreen={isFullScreen}
+                                    isRendererSupported={isRendererSupported}
+                                    isRtl={isRtl}
+                                    stageSize={stageSize}
+                                    vm={vm}
+                                />
+                                <Box className={styles.targetWrapper}>
+                                    <TargetPane
+                                        stageSize={stageSize}
+                                        vm={vm}
+                                    />
+                                </Box>
+                            </Box>
+                            {((isRealtimeMode === false) && (stageSizeMode !== STAGE_SIZE_MODES.hide)) ? (
+                                <Hardware
+                                    vm={vm}
+                                    stageSize={stageSize}
+                                />) : null
+                            }
+                        </Box>
+                    )}
                     <DragLayer />
                     {(isRealtimeMode === false) ? (
                         <HardwareHeader

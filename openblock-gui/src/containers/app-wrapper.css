@@ -1,0 +1,137 @@
+.appWrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.appContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Age Indicator */
+.ageIndicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid #FF8C42;
+    border-radius: 25px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(255, 140, 66, 0.2);
+    animation: slideInRight 0.5s ease-out;
+}
+
+.ageLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B5B4A;
+}
+
+.changeAgeButton {
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+}
+
+.changeAgeButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 140, 66, 0.4);
+}
+
+/* App Children Layout */
+.appChildren {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s ease;
+}
+
+.horizontalLayout {
+    /* Horizontal layout styles for age 4+ */
+    transform: scale(0.95);
+}
+
+.verticalLayout {
+    /* Vertical layout styles for age 7+ */
+    transform: scale(1);
+}
+
+/* Loading Container */
+.loadingContainer {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FFF8F0, #FEF6ED);
+}
+
+.loadingSpinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #F0F0F0;
+    border-top: 4px solid #FF8C42;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 24px;
+}
+
+.loadingText {
+    font-size: 1.2rem;
+    color: #6B5B4A;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ageIndicator {
+        top: 10px;
+        right: 10px;
+        padding: 10px 16px;
+        gap: 12px;
+    }
+    
+    .ageLabel {
+        font-size: 0.8rem;
+    }
+    
+    .changeAgeButton {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+    }
+}
