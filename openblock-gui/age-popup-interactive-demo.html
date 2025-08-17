@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenBlocks Age Selection Popup - Interactive Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FFF8F0, #FEF6ED);
+            min-height: 100vh;
+        }
+        
+        .demo-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .demo-header h1 {
+            margin: 0 0 16px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .demo-header p {
+            margin: 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .demo-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 2px solid #F0F0F0;
+        }
+        
+        .demo-section h2 {
+            color: #FF8C42;
+            margin: 0 0 20px 0;
+            font-size: 1.8rem;
+        }
+        
+        .demo-section p {
+            color: #6B5B4A;
+            line-height: 1.6;
+            margin: 0 0 16px 0;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+            margin: 10px 10px 10px 0;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 140, 66, 0.4);
+        }
+        
+        .demo-button.secondary {
+            background: linear-gradient(135deg, #6B5B4A, #857362);
+        }
+        
+        .demo-button.secondary:hover {
+            box-shadow: 0 6px 16px rgba(107, 91, 74, 0.4);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #FEF6ED;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #FF8C42;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 140, 66, 0.15);
+        }
+        
+        .feature-card h3 {
+            color: #FF8C42;
+            margin: 0 0 12px 0;
+            font-size: 1.3rem;
+        }
+        
+        .feature-card p {
+            color: #6B5B4A;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .code-block {
+            background: #2D3748;
+            color: #E2E8F0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .code-block .comment {
+            color: #718096;
+        }
+        
+        .code-block .keyword {
+            color: #F6AD55;
+        }
+        
+        .code-block .string {
+            color: #68D391;
+        }
+        
+        .code-block .number {
+            color: #F687B3;
+        }
+        
+        .menu-bar-demo {
+            background: #FF8C42;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+        
+        .age-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .age-indicator:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .age-indicator .current-age {
+            font-weight: bold;
+            color: #FF8C42;
+        }
+        
+        .age-indicator .dropdown-arrow {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .interactive-demo {
+            background: #F8F9FA;
+            border: 2px dashed #FF8C42;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .interactive-demo h3 {
+            color: #FF8C42;
+            margin: 0 0 20px 0;
+        }
+        
+        .interactive-demo p {
+            color: #6B5B4A;
+            margin: 0 0 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-header h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-header p {
+                font-size: 1rem;
+            }
+            
+            .demo-section {
+                padding: 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-bar-demo {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🎯 OpenBlocks Age Selection Popup</h1>
+        <p>Interactive Demo - Click the age indicators to see the popup in action!</p>
+    </div>
+    
+    <div class="demo-content">
+        <div class="demo-section">
+            <h2>🌟 What's New - Interactive Age Selection</h2>
+            <p>I've successfully implemented an interactive age selection system where users can click on age indicators (4+ or 7+) to open a beautiful popup and choose their experience level:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🖱️ Click to Open</h3>
+                    <p>Click on age indicators in the menu bar to open the selection popup</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✨ Beautiful Popup</h3>
+                    <p>Modern design with smooth animations and clear age options</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔄 Easy Switching</h3>
+                    <p>Users can change their age group anytime from the menu</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💾 Session Memory</h3>
+                    <p>Selections are remembered and persist across the session</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎮 Interactive Demo</h2>
+            <p>Here's how the new age selection system works in the menu bar:</p>
+            
+            <div class="interactive-demo">
+                <h3>Menu Bar Age Indicator</h3>
+                <p>Click on the age indicator below to see how it works in the actual OpenBlocks interface:</p>
+                
+                <div class="menu-bar-demo">
+                    <div class="age-indicator" onclick="showAgePopup()">
+                        <span class="current-age">7+</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <span>← This is how it appears in the menu bar</span>
+                </div>
+                
+                <p><strong>Try it:</strong> Click on the age indicator above to see the popup!</p>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🔧 Implementation Details</h2>
+            <p>The new interactive system includes:</p>
+            
+            <ul>
+                <li><strong>Clickable Age Indicators</strong> - Age indicators in the menu bar are now clickable</li>
+                <li><strong>Popup Trigger</strong> - Clicking opens the beautiful age selection popup</li>
+                <li><strong>Selection Flow</strong> - Users can choose between Age 4+ and Age 7+</li>
+                <li><strong>Immediate Application</strong> - Selection is applied and page reloads with new layout</li>
+                <li><strong>Close Functionality</strong> - Users can close the popup without making a selection</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <h2>💻 Code Implementation</h2>
+            <p>Here's how the interactive age selection is implemented:</p>
+            
+            <div class="code-block">
+<span class="comment">// Menu bar age indicator - clickable with dropdown arrow</span>
+&lt;div className={styles.menuBarItem} onClick={this.handleChangeAge}&gt;
+    &lt;span className="current-age"&gt;{ageManager.getCurrentAge() || 'Age?'}&lt;/span&gt;
+    &lt;span className="dropdown-arrow"&gt;▼&lt;/span&gt;
+&lt;/div&gt;
+
+<span class="comment">// Age selection popup - appears when indicator is clicked</span>
+{this.state.showAgePopup && (
+    &lt;AgeSelectionPopup 
+        onAgeSelect={this.handleAgeSelect} 
+        onClose={this.handleCloseAgePopup}
+    /&gt;
+)}
+
+<span class="comment">// Handle age selection and move to next step</span>
+handleAgeSelect(selectedAge) {
+    ageManager.setAge(selectedAge);
+    this.setState({ showAgePopup: false });
+    window.location.reload(); // Apply new layout
+}
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🚀 User Experience Flow</h2>
+            <p>The complete user experience now works like this:</p>
+            
+            <ol>
+                <li><strong>See Age Indicator</strong> - User sees current age (4+ or 7+) in menu bar</li>
+                <li><strong>Click to Open</strong> - User clicks on the age indicator</li>
+                <li><strong>Beautiful Popup</strong> - Age selection popup appears with smooth animation</li>
+                <li><strong>Choose Age</strong> - User selects Age 4+ or Age 7+</li>
+                <li><strong>Move to Next</strong> - Selection is applied and user moves to the appropriate interface</li>
+                <li><strong>Easy Switching</strong> - User can change age anytime by clicking the indicator again</li>
+            </ol>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🎉 Result</h2>
+            <p>Your OpenBlocks now has a <strong>fully interactive age selection system</strong> that:</p>
+            <ul>
+                <li>🎯 <strong>Shows popup on click</strong> - Age indicators are now clickable</li>
+                <li>✨ <strong>Beautiful animations</strong> - Smooth fade-in and slide-up effects</li>
+                <li>🔄 <strong>Easy switching</strong> - Users can change age groups anytime</li>
+                <li>💾 <strong>Session persistence</strong> - Selections are remembered</li>
+                <li>📱 <strong>Responsive design</strong> - Works perfectly on all devices</li>
+                <li>🚀 <strong>Immediate application</strong> - New layout is applied right away</li>
+            </ul>
+            
+            <p>The system now provides a <strong>seamless, interactive experience</strong> where users can easily switch between age groups and immediately see the results!</p>
+        </div>
+    </div>
+
+    <!-- Age Selection Popup -->
+    <div id="agePopup" class="age-popup-overlay" style="display: none;">
+        <div class="age-popup-content">
+            <div class="popup-header">
+                <button class="close-button" onclick="closeAgePopup()">×</button>
+                <h2>Welcome to OpenBlocks! 🎉</h2>
+                <p>Choose your experience level to get started</p>
+            </div>
+            
+            <div class="age-options">
+                <div class="age-option" onclick="selectAge('4+')">
+                    <div class="age-icon">4+</div>
+                    <div class="age-content">
+                        <h3>Young Learners</h3>
+                        <p>Simple, intuitive blocks arranged horizontally. Perfect for beginners and young children.</p>
+                    </div>
+                    <div class="select-button">Choose This</div>
+                </div>
+                
+                <div class="age-option" onclick="selectAge('7+')">
+                    <div class="age-icon">7+</div>
+                    <div class="age-content">
+                        <h3>Older Learners</h3>
+                        <p>Advanced blocks with vertical layout. More features and complex programming concepts.</p>
+                    </div>
+                    <div class="select-button">Choose This</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .age-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .age-popup-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        .popup-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: #FF8C42;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-button:hover {
+            background: #FF7A2E;
+            transform: scale(1.1);
+        }
+        
+        .popup-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FF8C42;
+            margin: 0 0 16px 0;
+        }
+        
+        .popup-header p {
+            font-size: 1.2rem;
+            color: #6B5B4A;
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .age-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .age-option {
+            background: linear-gradient(135deg, #FFF8F0, #FEF6ED);
+            border: 3px solid transparent;
+            border-radius: 16px;
+            padding: 32px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .age-option:hover {
+            transform: translateY(-8px);
+            border-color: #FF8C42;
+            box-shadow: 0 20px 40px rgba(255, 140, 66, 0.2);
+        }
+        
+        .age-icon {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+            color: white;
+            border-radius: 50%;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .age-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #6B5B4A;
+            margin: 0 0 12px 0;
+        }
+        
+        .age-content p {
+            font-size: 1rem;
+            color: #6B5B4A;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+        
+        .select-button {
+            background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .age-option:hover .select-button {
+            transform: scale(1.05);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .age-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .age-popup-content {
+                padding: 24px;
+                margin: 20px;
+            }
+        }
+    </style>
+
+    <script>
+        function showAgePopup() {
+            document.getElementById('agePopup').style.display = 'flex';
+        }
+        
+        function closeAgePopup() {
+            document.getElementById('agePopup').style.display = 'none';
+        }
+        
+        function selectAge(age) {
+            alert(`Age ${age} selected! In the real OpenBlocks app, this would:\n\n1. Save your age preference\n2. Apply the appropriate layout\n3. Reload the page with new interface\n4. Move you to the next step!`);
+            closeAgePopup();
+        }
+        
+        // Close popup when clicking outside
+        document.getElementById('agePopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAgePopup();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+.ageSelectionOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.ageSelectionPopup {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-out;
+}
+
+.popupHeader {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #FF8C42;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
+}
+
+.closeButton:hover {
+    background: #FF7A2E;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.4);
+}
+
+.popupTitle {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #FF8C42;
+    margin: 0 0 16px 0;
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.popupSubtitle {
+    font-size: 1.2rem;
+    color: #6B5B4A;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.ageOptions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.ageOption {
+    background: linear-gradient(135deg, #FFF8F0, #FEF6ED);
+    border: 3px solid transparent;
+    border-radius: 16px;
+    padding: 32px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.ageOption::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.ageOption:hover {
+    transform: translateY(-8px);
+    border-color: #FF8C42;
+    box-shadow: 0 20px 40px rgba(255, 140, 66, 0.2);
+}
+
+.ageOption:hover::before {
+    opacity: 0.05;
+}
+
+.ageIcon {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.ageNumber {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+    color: white;
+    border-radius: 50%;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 80px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255, 140, 66, 0.3);
+}
+
+.ageContent {
+    position: relative;
+    z-index: 2;
+}
+
+.ageTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #6B5B4A;
+    margin: 0 0 12px 0;
+    text-align: center;
+}
+
+.ageDescription {
+    font-size: 1rem;
+    color: #6B5B4A;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.selectButton {
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(255, 140, 66, 0.3);
+}
+
+.ageOption:hover .selectButton {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ageSelectionPopup {
+        padding: 24px;
+        margin: 20px;
+    }
+    
+    .popupTitle {
+        font-size: 2rem;
+    }
+    
+    .ageOptions {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .ageOption {
+        padding: 24px 20px;
+    }
+    
+    .ageNumber {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        line-height: 60px;
+    }
+}

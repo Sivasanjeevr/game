@@ -11,6 +11,9 @@ import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'openblock-vm';
 import Renderer from 'scratch-render';
 
+import AgeSelectionPopup from '../age-selection-popup/age-selection-popup.jsx';
+import ageManager from '../../lib/age-manager.js';
+
 import Blocks from '../../containers/blocks.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
 import TargetPane from '../../containers/target-pane.jsx';
@@ -155,74 +158,25 @@ const GUIComponent = props => {
         isRendererSupported = Renderer.isSupported();
     }
 
-    const [ageGroup, setAgeGroup] = useState(null);
-const [hasCheckedAgeGroup, setHasCheckedAgeGroup] = useState(false);
+    const [ageGroup, setAgeGroup] = useState(ageManager.getCurrentAge());
+    const [hasCheckedAgeGroup, setHasCheckedAgeGroup] = useState(false);
 
-useEffect(() => {
-    const storedAgeGroup = localStorage.getItem('userAgeGroup');
-    if (storedAgeGroup) {
-        setAgeGroup(storedAgeGroup);
-    }
-    setHasCheckedAgeGroup(true);
-}, []);
+    useEffect(() => {
+        // Check if age is already selected
+        if (ageManager.hasAgeSelected()) {
+            setAgeGroup(ageManager.getCurrentAge());
+        }
+        setHasCheckedAgeGroup(true);
+    }, []);
+
+    const handleAgeSelect = (selectedAge) => {
+        ageManager.setAge(selectedAge);
+        setAgeGroup(selectedAge);
+    };
 
 if (hasCheckedAgeGroup && !ageGroup) {
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.6)'
-        }}>
-            <div style={{
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                padding: '2rem',
-                width: '75%',
-                maxWidth: '600px',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
-                textAlign: 'center'
-            }}>
-                <h2 style={{fontSize: '1.5rem', marginBottom: '1.5rem'}}>Select Your Age Group</h2>
-                <div style={{display: 'flex', justifyContent: 'center', gap: '2rem'}}>
-                    <button
-                        onClick={() => {
-                            localStorage.setItem('userAgeGroup', '4+');
-                            setAgeGroup('4+');
-                        }}
-                        style={{
-                            padding: '1rem 2rem',
-                            fontSize: '1.25rem',
-                            borderRadius: '8px',
-                            border: 'none',
-                            backgroundColor: '#4CAF50',
-                            color: 'white',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Age 4+
-                    </button>
-                    <button
-                        onClick={() => {
-                            localStorage.setItem('userAgeGroup', '7+');
-                            setAgeGroup('7+');
-                        }}
-                        style={{
-                            padding: '1rem 2rem',
-                            fontSize: '1.25rem',
-                            borderRadius: '8px',
-                            border: 'none',
-                            backgroundColor: '#2196F3',
-                            color: 'white',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Age 7+
-                    </button>
-                </div>
-            </div>
-        </div>
+        <AgeSelectionPopup onAgeSelect={handleAgeSelect} />
     );
 }
 

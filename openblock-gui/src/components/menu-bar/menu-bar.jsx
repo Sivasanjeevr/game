@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import bowser from 'bowser';
 import React from 'react';
+import ageManager from '../../lib/age-manager.js';
+import AgeSelectionPopup from '../age-selection-popup/age-selection-popup.jsx';
 
 import VM from 'openblock-vm';
 
@@ -230,10 +232,14 @@ class MenuBar extends React.Component {
             'handleProgramModeUpdate',
             'handleScreenshot',
             'handleCheckUpdate',
-            'handleClearCache'
+            'handleClearCache',
+            'handleChangeAge',
+            'handleAgeSelect',
+            'handleCloseAgePopup'
         ]);
         this.state = {
-            isOverflow: false
+            isOverflow: false,
+            showAgePopup: false
         };
     }
     componentDidMount () {
@@ -460,6 +466,21 @@ class MenuBar extends React.Component {
             this.props.onClickClearCache();
         }
     }
+
+    handleChangeAge () {
+        this.setState({ showAgePopup: true });
+    }
+
+    handleAgeSelect (selectedAge) {
+        ageManager.setAge(selectedAge);
+        this.setState({ showAgePopup: false });
+        // Force a page reload to apply the new layout
+        window.location.reload();
+    }
+
+    handleCloseAgePopup () {
+        this.setState({ showAgePopup: false });
+    }
     buildAboutMenu (onClickAbout) {
         if (!onClickAbout) {
             // hide the button
@@ -576,7 +597,7 @@ class MenuBar extends React.Component {
                             onClick={this.props.onClickLogo}
                         />
                     </div> */}
-                    {(this.props.canChangeLanguage) && (<div
+                    {/* {(this.props.canChangeLanguage) && (<div
                         className={classNames(styles.menuBarItem, styles.hoverable, styles.languageMenu)}
                     >
                         <div>
@@ -590,7 +611,8 @@ class MenuBar extends React.Component {
                             />
                         </div>
                         <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
-                    </div>)}
+                    </div>)} */}
+                    
                     {(this.props.canManageFiles) && (
                         <div
                             className={classNames(styles.menuBarItem, styles.hoverable, {
@@ -880,10 +902,25 @@ class MenuBar extends React.Component {
                         />}
                     </div>
                     */}
-                    <div>
-                        {/* selected age group from the localstorage getitem */}
-                        Age group: {localStorage.getItem('userAgeGroup') || 'Unknown'}
+                    <div
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onClick={this.handleChangeAge}
+                        title={`Current: ${ageManager.getCurrentAge() || 'Not set'} - Click to change`}
+                    >
+                        Age group: 
+                        <span style={{fontSize: '0.9rem', fontWeight: 'bold', color: '#FF8C42'}}>
+                            {ageManager.getCurrentAge() || 'Age?'}
+                        </span>
+                        <span style={{fontSize: '0.7rem', marginLeft: '4px', opacity: 0.7}}>
+                            ▼
+                        </span>
                     </div>
+                    {this.state.showAgePopup && (
+                        <AgeSelectionPopup 
+                            onAgeSelect={this.handleAgeSelect} 
+                            onClose={this.handleCloseAgePopup}
+                        />
+                    )}
                     <Divider className={classNames(styles.divider)} /> 
                     {/* <div className={classNames(styles.menuBarItem, styles.programModeGroup)}>
                         <FormattedMessage
