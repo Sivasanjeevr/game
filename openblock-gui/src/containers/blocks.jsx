@@ -872,7 +872,7 @@ Blocks.defaultOptions = {
         workspace: '#F9F9F9',
         flyout: '#F9F9F9',
         toolbox: '#FFFFFF',
-        toolboxSelected: '#FEF6ED',
+        toolboxSelected: '#E9EEF2',
         scrollbar: '#CECDCE',
         scrollbarHover: '#CECDCE',
         insertionMarker: '#000000',

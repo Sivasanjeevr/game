@@ -28,6 +28,10 @@ class SpriteLibrary extends React.PureComponent {
     handleItemSelect (item) {
         // Randomize position of library sprite
         randomizeSpritePosition(item);
+        console.log('Adding sprite:', item);
+
+        console.log(JSON.stringify(item));
+
         this.props.vm.addSprite(JSON.stringify(item)).then(() => {
             this.props.onActivateBlocksTab();
         });

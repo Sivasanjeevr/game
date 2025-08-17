@@ -102,7 +102,7 @@ const getIsShowingWithoutId = loadingState => (
 );
 const getIsError = loadingState => (
     loadingState === LoadingState.ERROR
-);
+);  
 
 const initialState = {
     error: null,

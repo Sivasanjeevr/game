@@ -1,19 +1,15 @@
 import classNames from 'classnames';
 import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
+import {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import MediaQuery from 'react-responsive';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'openblock-vm';
 import Renderer from 'scratch-render';
-
-// Import age-based system components
-import AgeSelectionPopup from '../../components/age-selection-popup/age-selection-popup.jsx';
-import HorizontalLayout from '../../components/horizontal-layout/horizontal-layout.jsx';
-import ageManager from '../../lib/age-manager.js';
 
 import Blocks from '../../containers/blocks.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
@@ -142,46 +138,6 @@ const GUIComponent = props => {
         isRealtimeMode,
         ...componentProps
     } = omit(props, 'dispatch');
-
-    // Age-based system state management
-    const [showAgePopup, setShowAgePopup] = useState(false);
-    const [currentAge, setCurrentAge] = useState(ageManager.getCurrentAge());
-
-    useEffect(() => {
-        // Check if age is already selected
-        if (!ageManager.hasAgeSelected()) {
-            setShowAgePopup(true);
-        }
-
-        // Listen for age changes
-        const handleAgeChange = (newAge) => {
-            setCurrentAge(newAge);
-            setShowAgePopup(false);
-        };
-
-        ageManager.addListener(handleAgeChange);
-
-        // Listen for custom age change events from menu bar
-        const handleCustomAgeChange = (event) => {
-            const { age } = event.detail;
-            setCurrentAge(age);
-            setShowAgePopup(false);
-        };
-
-        window.addEventListener('ageChanged', handleCustomAgeChange);
-
-        return () => {
-            ageManager.removeListener(handleAgeChange);
-            window.removeEventListener('ageChanged', handleCustomAgeChange);
-        };
-    }, []);
-
-    const handleAgeSelect = (ageGroup) => {
-        ageManager.setAge(ageGroup);
-        setCurrentAge(ageGroup);
-        setShowAgePopup(false);
-    };
-
     if (children) {
         return <Box {...componentProps}>{children}</Box>;
     }
@@ -199,8 +155,81 @@ const GUIComponent = props => {
         isRendererSupported = Renderer.isSupported();
     }
 
-    return (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize => {
-        const stageSize = resolveStageSize(stageSizeMode, isFullSize);
+    const [ageGroup, setAgeGroup] = useState(null);
+const [hasCheckedAgeGroup, setHasCheckedAgeGroup] = useState(false);
+
+useEffect(() => {
+    const storedAgeGroup = localStorage.getItem('userAgeGroup');
+    if (storedAgeGroup) {
+        setAgeGroup(storedAgeGroup);
+    }
+    setHasCheckedAgeGroup(true);
+}, []);
+
+if (hasCheckedAgeGroup && !ageGroup) {
+    return (
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)'
+        }}>
+            <div style={{
+                backgroundColor: '#fff',
+                borderRadius: '12px',
+                padding: '2rem',
+                width: '75%',
+                maxWidth: '600px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
+                textAlign: 'center'
+            }}>
+                <h2 style={{fontSize: '1.5rem', marginBottom: '1.5rem'}}>Select Your Age Group</h2>
+                <div style={{display: 'flex', justifyContent: 'center', gap: '2rem'}}>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('userAgeGroup', '4+');
+                            setAgeGroup('4+');
+                        }}
+                        style={{
+                            padding: '1rem 2rem',
+                            fontSize: '1.25rem',
+                            borderRadius: '8px',
+                            border: 'none',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Age 4+
+                    </button>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('userAgeGroup', '7+');
+                            setAgeGroup('7+');
+                        }}
+                        style={{
+                            padding: '1rem 2rem',
+                            fontSize: '1.25rem',
+                            borderRadius: '8px',
+                            border: 'none',
+                            backgroundColor: '#2196F3',
+                            color: 'white',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Age 7+
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+return ageGroup && (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize => {
+    
+    const stageSize = resolveStageSize(stageSizeMode, isFullSize);
 
         return isPlayerOnly ? (
             <StageWrapper
@@ -235,12 +264,6 @@ const GUIComponent = props => {
                         onShowPrivacyPolicy={onShowPrivacyPolicy}
                     />
                 ) : null}
-                
-                {/* Age Selection Popup */}
-                {showAgePopup && (
-                    <AgeSelectionPopup onAgeSelect={handleAgeSelect} />
-                )}
-                
                 {loading ? (
                     <Loader />
                 ) : null}
@@ -327,16 +350,9 @@ const GUIComponent = props => {
                     onClickClearCache={onClickClearCache}
                     onClickInstallDriver={onClickInstallDriver}
                 />
-                
-
-                
                 <Box className={styles.bodyWrapper}>
-                    {/* Age-based Layout Wrapper */}
-                    {currentAge && ageManager.isYoungLearner() ? (
-                        // Age 4+ - Horizontal Layout
-                        <HorizontalLayout>
-                            <Box className={styles.flexWrapper}>
-                                <Box className={styles.editorWrapper}>
+                    <Box className={styles.flexWrapper}>
+                        <Box className={styles.editorWrapper}>
                             <Tabs
                                 forceRenderTabPanel
                                 className={tabClassNames.tabs}
@@ -470,147 +486,6 @@ const GUIComponent = props => {
                             />) : null
                         }
                     </Box>
-                    <DragLayer />
-                    {(isRealtimeMode === false) ? (
-                        <HardwareHeader
-                            vm={vm}
-                            stageSize={stageSize}
-                        />) : null
-                    }
-                        </HorizontalLayout>
-                    ) : (
-                        // Age 7+ - Vertical Layout (existing GUI)
-                        <Box className={styles.flexWrapper}>
-                            <Box className={styles.editorWrapper}>
-                                <Tabs
-                                    forceRenderTabPanel
-                                    className={tabClassNames.tabs}
-                                    selectedIndex={activeTabIndex}
-                                    selectedTabClassName={tabClassNames.tabSelected}
-                                    selectedTabPanelClassName={tabClassNames.tabPanelSelected}
-                                    onSelect={onActivateTab}
-                                >
-                                    <TabList className={tabClassNames.tabList}>
-                                        <Tab className={tabClassNames.tab}>
-                                            <img
-                                                draggable={false}
-                                                src={codeIcon}
-                                            />
-                                            <FormattedMessage
-                                                defaultMessage="Code"
-                                                description="Button to get to the code panel"
-                                                id="gui.gui.codeTab"
-                                            />
-                                        </Tab>
-                                        <Tab
-                                            className={classNames(tabClassNames.tab,
-                                                isRealtimeMode ? styles.hideCustomAndSoundTab :
-                                                    styles.showCustomAndSoundTab)}
-                                            onClick={onActivateCostumesTab}
-                                        >
-                                            <img
-                                                draggable={false}
-                                                src={costumesIcon}
-                                            />
-                                            {targetIsStage ? (
-                                                <FormattedMessage
-                                                    defaultMessage="Backdrops"
-                                                    description="Button to get to the backdrops panel"
-                                                    id="gui.gui.backdropsTab"
-                                                />
-                                            ) : (
-                                                <FormattedMessage
-                                                    defaultMessage="Costumes"
-                                                    description="Button to get to the costumes panel"
-                                                    id="gui.gui.costumesTab"
-                                                />
-                                            )}
-                                        </Tab>
-                                        <Tab
-                                            className={classNames(tabClassNames.tab,
-                                                isRealtimeMode ? styles.hideCustomAndSoundTab :
-                                                    styles.showCustomAndSoundTab)}
-                                            onClick={onActivateSoundsTab}
-                                        >
-                                            <img
-                                                draggable={false}
-                                                src={soundsIcon}
-                                            />
-                                            <FormattedMessage
-                                                defaultMessage="Sounds"
-                                                description="Button to get to the sounds panel"
-                                                id="gui.gui.soundsTab"
-                                            />
-                                        </Tab>
-                                    </TabList>
-                                    <TabPanel className={tabClassNames.tabPanel}>
-                                        <Box className={styles.blocksWrapper}>
-                                            <Blocks
-                                                canUseCloud={canUseCloud}
-                                                grow={1}
-                                                isVisible={blocksTabVisible}
-                                                options={{
-                                                    media: `${basePath}static/blocks-media/`
-                                                }}
-                                                stageSize={stageSize}
-                                                vm={vm}
-                                                onShowMessageBox={onShowMessageBox}
-                                            />
-                                        </Box>
-                                        <Box className={styles.extensionButtonContainer}>
-                                            <button
-                                                className={styles.extensionButton}
-                                                title={intl.formatMessage(messages.addExtension)}
-                                                onClick={onExtensionButtonClick}
-                                            >
-                                                <img
-                                                className={styles.extensionButtonIcon}
-                                                draggable={false}
-                                                src={addExtensionIcon}
-                                            />
-                                            </button>
-                                        </Box>
-                                        <Box className={styles.watermark}>
-                                            <Watermark />
-                                        </Box>
-                                    </TabPanel>
-                                    <TabPanel className={tabClassNames.tabPanel}>
-                                        {costumesTabVisible ? <CostumeTab vm={vm} /> : null}
-                                    </TabPanel>
-                                    <TabPanel className={tabClassNames.tabPanel}>
-                                        {soundsTabVisible ? <SoundTab
-                                            vm={vm}
-                                            onShowMessageBox={onShowMessageBox}
-                                        /> : null}
-                                    </TabPanel>
-                                </Tabs>
-                            </Box>
-                            <Box
-                                className={classNames(styles.stageAndTargetWrapper, styles[stageSize],
-                                    isRealtimeMode ? styles.showStage : styles.hideStage)}
-                            >
-                                <StageWrapper
-                                    isFullScreen={isFullScreen}
-                                    isRendererSupported={isRendererSupported}
-                                    isRtl={isRtl}
-                                    stageSize={stageSize}
-                                    vm={vm}
-                                />
-                                <Box className={styles.targetWrapper}>
-                                    <TargetPane
-                                        stageSize={stageSize}
-                                        vm={vm}
-                                    />
-                                </Box>
-                            </Box>
-                            {((isRealtimeMode === false) && (stageSizeMode !== STAGE_SIZE_MODES.hide)) ? (
-                                <Hardware
-                                    vm={vm}
-                                    stageSize={stageSize}
-                                />) : null
-                            }
-                        </Box>
-                    )}
                     <DragLayer />
                     {(isRealtimeMode === false) ? (
                         <HardwareHeader
