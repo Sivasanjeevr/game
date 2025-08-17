@@ -83,7 +83,7 @@ import styles from './menu-bar.css';
 
 import helpIcon from '../../lib/assets/icon--tutorials.svg';
 // import mystuffIcon from './icon--mystuff.png';
-// import profileIcon from './icon--profile.png';
+import profileIcon from './icon--profile.png';
 import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
 import languageIcon from '../language-selector/language-icon.svg';
@@ -571,11 +571,11 @@ class MenuBar extends React.Component {
                                 [styles.clickable]: typeof this.props.onClickLogo !== 'undefined'
                             })}
                             draggable={false}
-                            src={this.state.isOverflow ? this.props.logoSmall : this.props.logo}
+                            src={profileIcon}
                             onClick={this.props.onClickLogo}
                         />
                     </div>
-                    {(this.props.canChangeLanguage) && (<div
+                    {/* {(this.props.canChangeLanguage) && (<div
                         className={classNames(styles.menuBarItem, styles.hoverable, styles.languageMenu)}
                     >
                         <div>
@@ -589,7 +589,7 @@ class MenuBar extends React.Component {
                             />
                         </div>
                         <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
-                    </div>)}
+                    </div>)} */}
                     {(this.props.canManageFiles) && (
                         <div
                             className={classNames(styles.menuBarItem, styles.hoverable, {
@@ -716,7 +716,7 @@ class MenuBar extends React.Component {
                             </MenuSection>
                         </MenuBarMenu>
                     </div>
-                    <Divider className={classNames(styles.divider)} />
+                    {/* <Divider className={classNames(styles.divider)} />
                     <div
                         className={classNames(styles.menuBarItem, styles.hoverable)}
                         onMouseUp={this.handleSelectDeviceMouseUp}
@@ -737,8 +737,8 @@ class MenuBar extends React.Component {
                                     id="gui.menuBar.noDeviceSelected"
                                 />
                             )}
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
+                    </div> */}
+                    {/* <Divider className={classNames(styles.divider)} />
                     <div
                         className={classNames(styles.menuBarItem, styles.hoverable)}
                         onMouseUp={this.handleConnectionMouseUp}
@@ -764,7 +764,7 @@ class MenuBar extends React.Component {
                                 />}
                             </React.Fragment>
                         )}
-                    </div>
+                    </div> */}
                     {/* <div
                         className={classNames(styles.menuBarItem)}
                     >
@@ -822,7 +822,7 @@ class MenuBar extends React.Component {
                         />
                         {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.community} />}
                     </div>*/}
-                    <div
+                    {/* <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.wiki)}
                         className={classNames(styles.menuBarItem, styles.hoverable)}
                         onClick={this.handleClickOpenWiki}
@@ -832,7 +832,7 @@ class MenuBar extends React.Component {
                             src={wikiIcon}
                         />
                         {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.wiki} />}
-                    </div>
+                    </div> */}
                     <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
                         className={classNames(styles.menuBarItem, styles.hoverable)}
@@ -856,7 +856,7 @@ class MenuBar extends React.Component {
                             src={screenshotIcon}
                         />
                     </div>
-                    <Divider className={classNames(styles.divider)} />
+                    {/* <Divider className={classNames(styles.divider)} />
                     <div
                         className={classNames(styles.menuBarItem, this.props.isRealtimeMode &&
                             this.props.peripheralName ? styles.hoverable : styles.disabled)}
@@ -874,8 +874,8 @@ class MenuBar extends React.Component {
                             description="Button to upload the realtime firmware"
                             id="gui.menuBar.uploadFirmware"
                         />}
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
+                    </div> */}
+                    {/* <Divider className={classNames(styles.divider)} />
                     <div className={classNames(styles.menuBarItem, styles.programModeGroup)}>
                         <FormattedMessage
                             defaultMessage="Program Mode"
@@ -896,7 +896,7 @@ class MenuBar extends React.Component {
                             uncheckedIcon={false}
                             checkedIcon={false}
                         />
-                    </div>
+                    </div> */}
                     {isScratchDesktop() ? (
                         <div
                             className={classNames(styles.menuBarItem, styles.hoverable, {
