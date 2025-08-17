@@ -30,6 +30,7 @@ import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import {isScratchDesktop} from '../../lib/isScratchDesktop';
 import {UPDATE_MODAL_STATE} from '../../lib/update-state.js';
+import ageManager from '../../lib/age-manager.js';
 
 import {
     openTipsLibrary,
@@ -228,6 +229,7 @@ class MenuBar extends React.Component {
             'handleProgramModeSwitchOnChange',
             'handleProgramModeUpdate',
             'handleScreenshot',
+            'handleAgeGroupClick',
             'handleCheckUpdate',
             'handleClearCache'
         ]);
@@ -447,6 +449,236 @@ class MenuBar extends React.Component {
             });
         }
     }
+    
+    handleAgeGroupClick () {
+        // Create the same popup design as the original age selection popup
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+        `;
+        
+        // Create the age selection popup container
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease-out;
+        `;
+        
+        // Create header
+        const header = document.createElement('div');
+        header.style.cssText = `
+            text-align: center;
+            margin-bottom: 40px;
+        `;
+        
+        const title = document.createElement('h2');
+        title.textContent = 'Welcome to OpenBlocks! 🎉';
+        title.style.cssText = `
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FF8C42;
+            margin: 0 0 16px 0;
+            background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        `;
+        
+        const subtitle = document.createElement('p');
+        subtitle.textContent = 'Choose your experience level to get started';
+        subtitle.style.cssText = `
+            font-size: 1.2rem;
+            color: #6B5B4A;
+            margin: 0;
+            opacity: 0.8;
+        `;
+        
+        header.appendChild(title);
+        header.appendChild(subtitle);
+        
+        // Create age options container
+        const ageOptions = document.createElement('div');
+        ageOptions.style.cssText = `
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        `;
+        
+        // Create age option function
+        const createAgeOption = (age, title, description) => {
+            const option = document.createElement('div');
+            option.style.cssText = `
+                background: linear-gradient(135deg, #FFF8F0, #FEF6ED);
+                border: 3px solid transparent;
+                border-radius: 16px;
+                padding: 32px 24px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            `;
+            
+            // Add hover effect
+            option.onmouseenter = () => {
+                option.style.transform = 'translateY(-8px)';
+                option.style.borderColor = '#FF8C42';
+                option.style.boxShadow = '0 20px 40px rgba(255, 140, 66, 0.2)';
+            };
+            
+            option.onmouseleave = () => {
+                option.style.transform = 'translateY(0)';
+                option.style.borderColor = 'transparent';
+                option.style.boxShadow = 'none';
+            };
+            
+            // Age icon
+            const ageIcon = document.createElement('div');
+            ageIcon.style.cssText = `
+                text-align: center;
+                margin-bottom: 20px;
+                position: relative;
+                z-index: 2;
+            `;
+            
+            const ageNumber = document.createElement('span');
+            ageNumber.textContent = age;
+            ageNumber.style.cssText = `
+                display: inline-block;
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+                color: white;
+                border-radius: 50%;
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 80px;
+                text-align: center;
+                box-shadow: 0 8px 24px rgba(255, 140, 66, 0.3);
+            `;
+            
+            ageIcon.appendChild(ageNumber);
+            
+            // Age content
+            const ageContent = document.createElement('div');
+            ageContent.style.cssText = `
+                position: relative;
+                z-index: 2;
+            `;
+            
+            const ageTitle = document.createElement('h3');
+            ageTitle.textContent = title;
+            ageTitle.style.cssText = `
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #6B5B4A;
+                margin: 0 0 12px 0;
+                text-align: center;
+            `;
+            
+            const ageDescription = document.createElement('p');
+            ageDescription.textContent = description;
+            ageDescription.style.cssText = `
+                font-size: 1rem;
+                color: #6B5B4A;
+                margin: 0 0 20px 0;
+                line-height: 1.5;
+                text-align: center;
+                opacity: 0.8;
+            `;
+            
+            ageContent.appendChild(ageTitle);
+            ageContent.appendChild(ageDescription);
+            
+            // Select button
+            const selectButton = document.createElement('div');
+            selectButton.textContent = 'Choose This';
+            selectButton.style.cssText = `
+                background: linear-gradient(135deg, #FF8C42, #FF7A2E);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-weight: 600;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 16px rgba(255, 140, 66, 0.3);
+            `;
+            
+            // Add click handler
+            option.onclick = () => {
+                ageManager.setAge(age);
+                document.body.removeChild(popup);
+                // Force a re-render by dispatching a custom event
+                window.dispatchEvent(new CustomEvent('ageChanged', { detail: { age } }));
+            };
+            
+            option.appendChild(ageIcon);
+            option.appendChild(ageContent);
+            option.appendChild(selectButton);
+            
+            return option;
+        };
+        
+        // Create the two age options
+        const youngOption = createAgeOption('4+', 'Young Learners', 'Simple, intuitive blocks arranged horizontally. Perfect for beginners and young children.');
+        const olderOption = createAgeOption('7+', 'Older Learners', 'Advanced blocks with vertical layout. More features and complex programming concepts.');
+        
+        ageOptions.appendChild(youngOption);
+        ageOptions.appendChild(olderOption);
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideUp {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(30px); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0); 
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Assemble the popup
+        content.appendChild(header);
+        content.appendChild(ageOptions);
+        popup.appendChild(content);
+        
+        // Close popup when clicking outside
+        popup.onclick = (e) => {
+            if (e.target === popup) {
+                document.body.removeChild(popup);
+            }
+        };
+        
+        document.body.appendChild(popup);
+    }
+    
     handleCheckUpdate () {
         this.props.onSetUpdate({phase: UPDATE_MODAL_STATE.checkingApplication});
         this.props.onClickCheckUpdate();
@@ -843,6 +1075,21 @@ class MenuBar extends React.Component {
                             src={helpIcon}
                         />
                         {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.tutorials} />}
+                    </div>
+                    <Divider className={classNames(styles.divider)} />
+                    {/* Age Group Button */}
+                    <div
+                        aria-label="Age Group Selection"
+                        className={classNames(styles.menuBarItem, styles.hoverable, styles.ageGroupItem)}
+                        onClick={this.handleAgeGroupClick}
+                        title={`Current Age Group: ${ageManager.getCurrentAge() || 'Not Selected'}`}
+                    >
+                        <div className={styles.ageGroupContent}>
+                            <span className={styles.ageGroupLabel}>
+                                {ageManager.getCurrentAge() || 'Age'}
+                            </span>
+                            <span className={styles.ageGroupIcon}>👶</span>
+                        </div>
                     </div>
                     <Divider className={classNames(styles.divider)} />
                     <div

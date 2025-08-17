@@ -64,20 +64,6 @@ const AppWrapper = ({
 
             {/* Main App Content */}
             <div className={styles.appContent}>
-                {/* Age Indicator and Settings */}
-                <div className={styles.ageIndicator}>
-                    <span className={styles.ageLabel}>
-                        Age Group: {currentAge}
-                    </span>
-                    <button 
-                        className={styles.changeAgeButton}
-                        onClick={handleShowAgePopup}
-                        title="Change age group"
-                    >
-                        Change
-                    </button>
-                </div>
-
                 {/* Render children with age-based layout */}
                 <div className={classNames(styles.appChildren, {
                     [styles.horizontalLayout]: ageManager.isYoungLearner(),

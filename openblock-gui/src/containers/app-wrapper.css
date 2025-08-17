@@ -12,47 +12,7 @@
     flex-direction: column;
 }
 
-/* Age Indicator */
-.ageIndicator {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border: 2px solid #FF8C42;
-    border-radius: 25px;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    z-index: 1000;
-    box-shadow: 0 8px 24px rgba(255, 140, 66, 0.2);
-    animation: slideInRight 0.5s ease-out;
-}
 
-.ageLabel {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #6B5B4A;
-}
-
-.changeAgeButton {
-    background: linear-gradient(135deg, #FF8C42, #FF7A2E);
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
-}
-
-.changeAgeButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 140, 66, 0.4);
-}
 
 /* App Children Layout */
 .appChildren {

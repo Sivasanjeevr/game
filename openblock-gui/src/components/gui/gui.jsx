@@ -161,8 +161,18 @@ const GUIComponent = props => {
 
         ageManager.addListener(handleAgeChange);
 
+        // Listen for custom age change events from menu bar
+        const handleCustomAgeChange = (event) => {
+            const { age } = event.detail;
+            setCurrentAge(age);
+            setShowAgePopup(false);
+        };
+
+        window.addEventListener('ageChanged', handleCustomAgeChange);
+
         return () => {
             ageManager.removeListener(handleAgeChange);
+            window.removeEventListener('ageChanged', handleCustomAgeChange);
         };
     }, []);
 
@@ -318,54 +328,7 @@ const GUIComponent = props => {
                     onClickInstallDriver={onClickInstallDriver}
                 />
                 
-                {/* Age Indicator */}
-                {currentAge && (
-                    <div style={{
-                        position: 'fixed',
-                        top: '20px',
-                        right: '20px',
-                        background: 'rgba(255, 255, 255, 0.95)',
-                        backdropFilter: 'blur(10px)',
-                        border: '2px solid #FF8C42',
-                        borderRadius: '25px',
-                        padding: '12px 20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        zIndex: 1000,
-                        boxShadow: '0 8px 24px rgba(255, 140, 66, 0.2)',
-                        fontSize: '0.9rem',
-                        fontWeight: '600'
-                    }}>
-                        <span style={{color: '#6B5B4A'}}>
-                            Age Group: {currentAge}
-                        </span>
-                        <button 
-                            onClick={() => setShowAgePopup(true)}
-                            style={{
-                                background: 'linear-gradient(135deg, #FF8C42, #FF7A2E)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '20px',
-                                padding: '6px 16px',
-                                fontSize: '0.8rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.transform = 'translateY(-2px)';
-                                e.target.style.boxShadow = '0 6px 16px rgba(255, 140, 66, 0.4)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.transform = 'translateY(0)';
-                                e.target.style.boxShadow = '0 4px 12px rgba(255, 140, 66, 0.3)';
-                            }}
-                        >
-                            Change
-                        </button>
-                    </div>
-                )}
+
                 
                 <Box className={styles.bodyWrapper}>
                     {/* Age-based Layout Wrapper */}
