@@ -270,44 +270,47 @@ return ageGroup && (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize =
                         onShowMessageBox={onShowMessageBox}
                     />
                 ) : null}
-                <MenuBar
-                    accountNavOpen={accountNavOpen}
-                    authorId={authorId}
-                    authorThumbnailUrl={authorThumbnailUrl}
-                    authorUsername={authorUsername}
-                    canChangeLanguage={canChangeLanguage}
-                    canCreateCopy={canCreateCopy}
-                    canCreateNew={canCreateNew}
-                    canEditTitle={canEditTitle}
-                    canManageFiles={canManageFiles}
-                    canRemix={canRemix}
-                    canSave={canSave}
-                    canShare={canShare}
-                    className={styles.menuBarPosition}
-                    enableCommunity={enableCommunity}
-                    isShared={isShared}
-                    logo={logo}
-                    renderLogin={renderLogin}
-                    showComingSoon={showComingSoon}
-                    onClickAbout={onClickAbout}
-                    onClickAccountNav={onClickAccountNav}
-                    onClickLogo={onClickLogo}
-                    onCloseAccountNav={onCloseAccountNav}
-                    onLogOut={onLogOut}
-                    onOpenRegistration={onOpenRegistration}
-                    onProjectTelemetryEvent={onProjectTelemetryEvent}
-                    onSeeCommunity={onSeeCommunity}
-                    onShare={onShare}
-                    onStartSelectingFileUpload={onStartSelectingFileUpload}
-                    onShowMessageBox={onShowMessageBox}
-                    onToggleLoginOpen={onToggleLoginOpen}
-                    onClickCheckUpdate={onClickCheckUpdate}
-                    onClickClearCache={onClickClearCache}
-                    onClickInstallDriver={onClickInstallDriver}
-                />
-                
-                {/* Age-Based Layout Switching */}
-                {ageManager.isYoungLearner() ? (
+                {/* Only show main interface when not loading */}
+                {!loading && !isCreating ? (
+                    <>
+                        <MenuBar
+                            accountNavOpen={accountNavOpen}
+                            authorId={authorId}
+                            authorThumbnailUrl={authorThumbnailUrl}
+                            authorUsername={authorUsername}
+                            canChangeLanguage={canChangeLanguage}
+                            canCreateCopy={canCreateCopy}
+                            canCreateNew={canCreateNew}
+                            canEditTitle={canEditTitle}
+                            canManageFiles={canManageFiles}
+                            canRemix={canRemix}
+                            canSave={canSave}
+                            canShare={canShare}
+                            className={styles.menuBarPosition}
+                            enableCommunity={enableCommunity}
+                            isShared={isShared}
+                            logo={logo}
+                            renderLogin={renderLogin}
+                            showComingSoon={showComingSoon}
+                            onClickAbout={onClickAbout}
+                            onClickAccountNav={onClickAccountNav}
+                            onClickLogo={onClickLogo}
+                            onCloseAccountNav={onCloseAccountNav}
+                            onLogOut={onLogOut}
+                            onOpenRegistration={onOpenRegistration}
+                            onProjectTelemetryEvent={onProjectTelemetryEvent}
+                            onSeeCommunity={onSeeCommunity}
+                            onShare={onShare}
+                            onStartSelectingFileUpload={onStartSelectingFileUpload}
+                            onShowMessageBox={onShowMessageBox}
+                            onToggleLoginOpen={onToggleLoginOpen}
+                            onClickCheckUpdate={onClickCheckUpdate}
+                            onClickClearCache={onClickClearCache}
+                            onClickInstallDriver={onClickInstallDriver}
+                        />
+                        
+                        {/* Age-Based Layout Switching */}
+                        {ageManager.isYoungLearner() ? (
                     // Age 4+ - Horizontal Layout
                     <HorizontalLayout
                         vm={vm}
@@ -474,6 +477,8 @@ return ageGroup && (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize =
                         }
                     </Box>
                 )}
+                    </>
+                ) : null}
             </Box>
         );
     }}</MediaQuery>);

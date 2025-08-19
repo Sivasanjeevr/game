@@ -7,6 +7,35 @@
    YOUNG LEARNERS HORIZONTAL BOTTOM TOOLBOX
    ======================================== */
 
+/* LOADING STATE - HIDE TOOLBOX AND FLYOUT DURING LOADING */
+/* Hide toolbox when loading overlay is present */
+body:has(.gui_pageWrapper .loader_content), 
+.gui_pageWrapper:has(.loader_content) .blocks-young :global(.blocklyToolboxDiv),
+.gui_pageWrapper:has(.loader_content) .blocks-young :global(.blocklyFlyout) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Alternative approach - hide when loader is active */
+.loader_content ~ .blocks-young :global(.blocklyToolboxDiv),
+.loader_content ~ .blocks-young :global(.blocklyFlyout) {
+    display: none !important;
+}
+
+/* AGE SELECTION POPUP OVERRIDE - ENSURE POPUP APPEARS ABOVE TOOLBOX */
+/* When age selection popup is visible, lower the z-index of toolbox and flyout even more */
+body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyToolboxDiv),
+body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
+    z-index: 50 !important;
+}
+
+/* Fallback for browsers that don't support :has() */
+.ageSelectionOverlay ~ * .blocks-young :global(.blocklyToolboxDiv),
+.ageSelectionOverlay ~ * .blocks-young :global(.blocklyFlyout) {
+    z-index: 50 !important;
+}
+
 /* HORIZONTAL BOTTOM TOOLBOX LAYOUT - REDUCED HEIGHT */
 .blocks-young :global(.blocklyToolboxDiv) {
     /* Position at bottom of workspace */
@@ -37,8 +66,8 @@
     align-items: center !important;
     padding: 4px 12px !important; /* Reduced padding from 8px 16px to 4px 12px */
     
-    /* Z-index to stay on top */
-    z-index: 1000 !important;
+    /* Z-index - lower to allow modals to appear on top */
+    z-index: 100 !important;
 }
 
 /* HORIZONTAL CATEGORY ITEMS - COLORFUL ROUNDED DESIGN */
@@ -137,8 +166,8 @@
     align-items: center !important;
     padding: 12px !important;
     
-    /* Z-index */
-    z-index: 999 !important;
+    /* Z-index - lower to allow modals to appear on top */
+    z-index: 99 !important;
 }
 
 /* WORKSPACE ADJUSTMENT FOR BOTTOM TOOLBOX - MAXIMIZED EDITOR HEIGHT */

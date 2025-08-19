@@ -1,4 +1,5 @@
 import React from 'react';
+import {createPortal} from 'react-dom';
 import PropTypes from 'prop-types';
 import {injectIntl, intlShape} from 'react-intl';
 import classNames from 'classnames';
@@ -20,7 +21,8 @@ const AgeSelectionPopup = ({
         }
     };
 
-    return (
+    // Use createPortal to render popup at document root level, avoiding z-index stacking context issues
+    return createPortal(
         <div className={styles.ageSelectionOverlay} onClick={handleClose}>
             <div className={styles.ageSelectionPopup} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.popupHeader}>
@@ -80,7 +82,8 @@ const AgeSelectionPopup = ({
                 </div>
 
             </div>
-        </div>
+        </div>,
+        document.body // Render at document body level to escape stacking context
     );
 };
 
