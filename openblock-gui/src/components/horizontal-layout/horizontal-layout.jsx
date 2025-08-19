@@ -145,7 +145,7 @@ const HorizontalLayout = ({
                                         onShowMessageBox={defaultProps.onShowMessageBox}
                                     />
                                 </Box>
-                                <Box className={styles.extensionButtonContainer}>
+                                {/* <Box className={styles.extensionButtonContainer}>
                                     <button
                                         className={styles.extensionButton}
                                         title="Add Extension"
@@ -157,10 +157,10 @@ const HorizontalLayout = ({
                                             src={require('../gui/icon--extensions.svg')}
                                         />
                                     </button>
-                                </Box>
-                                <Box className={styles.watermark}>
+                                </Box> */}
+                                {/* <Box className={styles.watermark}>
                                     <Watermark />
-                                </Box>
+                                </Box> */}
                             </TabPanel>
 
                             {/* Costumes Tab Panel */}

@@ -36,25 +36,26 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     z-index: 50 !important;
 }
 
-/* HORIZONTAL BOTTOM TOOLBOX LAYOUT - REDUCED HEIGHT */
+/* HORIZONTAL TOOLBOX LAYOUT - MENU ABOVE SUBMENU */
 .blocks-young :global(.blocklyToolboxDiv) {
-    /* Position at bottom of workspace */
+    /* Position above the flyout - menu comes first */
     position: absolute !important;
-    bottom: 0 !important;
+    bottom: 120px !important; /* Above the 120px high flyout */
     left: 0 !important;
     right: 0 !important;
     top: auto !important;
     
-    /* Horizontal layout - REDUCED HEIGHT */
+    /* Horizontal layout - MENU HEIGHT */
     width: 100% !important;
-    height: 80px !important; /* Reduced from 120px to 80px */
+    height: 80px !important;
     min-width: auto !important;
     
     /* Styling */
     background: linear-gradient(to top, #e8f4fd, #f0f8ff) !important;
     border-top: 3px solid $ui-black-transparent !important;
+    border-bottom: 1px solid #ddd !important;
     border-right: none !important;
-    border-radius: 12px 12px 0 0 !important;
+    border-radius: 8px 8px 0 0 !important; /* Rounded top corners */
     
     /* Horizontal scrolling if needed */
     overflow-x: auto !important;
@@ -64,7 +65,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    padding: 4px 12px !important; /* Reduced padding from 8px 16px to 4px 12px */
+    padding: 4px 12px !important;
     
     /* Z-index - lower to allow modals to appear on top */
     z-index: 100 !important;
@@ -136,25 +137,25 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     z-index: 2 !important; /* Above the shine effect */
 }
 
-/* HORIZONTAL FLYOUT POSITIONING - UPDATED FOR SMALLER TOOLBOX */
+/* HORIZONTAL FLYOUT POSITIONING - SUBMENU AT THE BOTTOM */
 .blocks-young :global(.blocklyFlyout) {
-    /* Position above the horizontal toolbox */
+    /* Position at the very bottom - submenu comes last */
     position: absolute !important;
-    bottom: 80px !important; /* Above the 80px high toolbox (reduced from 120px) */
+    bottom: 0 !important; /* At the bottom of workspace */
     left: 0 !important;
     right: 0 !important;
     top: auto !important;
     
-    /* Horizontal flyout layout - KEPT SAME HEIGHT */
+    /* Horizontal flyout layout - SUBMENU HEIGHT */
     width: 100% !important;
-    height: 120px !important; /* Keep flyout height the same for block visibility */
+    height: 120px !important;
     
     /* Styling */
-    background: linear-gradient(to top, #f8f8f8, #ffffff) !important;
+    background: linear-gradient(to bottom, #f8f8f8, #ffffff) !important;
     border-top: 2px solid $ui-black-transparent !important;
     border-right: none !important;
-    border-bottom: 1px solid #ddd !important;
-    border-radius: 8px 8px 0 0 !important;
+    border-bottom: none !important;
+    border-radius: 0 0 12px 12px !important; /* Rounded bottom corners */
     
     /* Horizontal scrolling */
     overflow-x: auto !important;
@@ -170,17 +171,17 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     z-index: 99 !important;
 }
 
-/* WORKSPACE ADJUSTMENT FOR BOTTOM TOOLBOX - MAXIMIZED EDITOR HEIGHT */
+/* WORKSPACE ADJUSTMENT FOR MENU + SUBMENU - MAXIMIZED EDITOR HEIGHT */
 .blocks-young :global(.blocklyMainBackground) {
-    /* Main workspace background - reserve space for smaller toolbox */
-    height: calc(100% - 80px) !important; /* Reduced from 120px to 80px */
+    /* Main workspace background - reserve space for menu (80px) + submenu (120px) */
+    height: calc(100% - 200px) !important; /* Total: 80px menu + 120px submenu = 200px */
 }
 
 .blocks-young :global(.blocklyWorkspaceContainer) {
-    /* Main coding editor workspace - MAXIMIZED HEIGHT */
-    height: calc(100% - 80px) !important; /* Reduced from 120px to 80px */
-    margin-bottom: 80px !important; /* Reduced from 120px to 80px */
-    /* Editor now has 40px more space! */
+    /* Main coding editor workspace - adjusted for new layout */
+    height: calc(100% - 200px) !important; /* Total: 80px menu + 120px submenu = 200px */
+    margin-bottom: 200px !important; /* Space for menu + submenu */
+    /* Editor workspace properly positioned above both menu and submenu */
 }
 
 /* HIDE PROBLEMATIC SCROLLBARS FOR YOUNG AGE HORIZONTAL LAYOUT */
@@ -391,6 +392,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     .blocks-young :global(.blocklyToolboxDiv) {
         height: 70px !important;
         padding: 3px 8px !important;
+        bottom: 100px !important; /* Above the 100px high flyout */
     }
     
     .blocks-young :global(.scratchCategoryMenuItem) {
@@ -407,10 +409,10 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     }
     
     .blocks-young :global(.blocklyFlyout) {
-        bottom: 70px !important;
+        bottom: 0 !important; /* At the very bottom */
         height: 100px !important;
         padding: 8px !important;
-        border-radius: 12px !important; /* Smaller radius */
+        border-radius: 0 0 12px 12px !important; /* Rounded bottom corners */
     }
     
     .blocks-young :global(.blocklyFlyout .blocklyBlock) {
@@ -420,8 +422,8 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     
     .blocks-young :global(.blocklyMainBackground),
     .blocks-young :global(.blocklyWorkspaceContainer) {
-        height: calc(100% - 70px) !important;
-        margin-bottom: 70px !important;
+        height: calc(100% - 170px) !important; /* 70px menu + 100px submenu = 170px */
+        margin-bottom: 170px !important;
     }
     
     .blocks-young :global(.blocklyScrollbarVertical) {
@@ -438,6 +440,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     .blocks-young :global(.blocklyToolboxDiv) {
         height: 60px !important;
         padding: 2px 6px !important;
+        bottom: 90px !important; /* Above the 90px high flyout */
     }
     
     .blocks-young :global(.scratchCategoryMenuItem) {
@@ -454,10 +457,10 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     }
     
     .blocks-young :global(.blocklyFlyout) {
-        bottom: 60px !important;
+        bottom: 0 !important; /* At the very bottom */
         height: 90px !important;
         padding: 6px !important;
-        border-radius: 10px !important; /* Smaller radius */
+        border-radius: 0 0 10px 10px !important; /* Rounded bottom corners */
     }
     
     .blocks-young :global(.blocklyFlyout .blocklyBlock) {
@@ -471,8 +474,8 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     
     .blocks-young :global(.blocklyMainBackground),
     .blocks-young :global(.blocklyWorkspaceContainer) {
-        height: calc(100% - 60px) !important;
-        margin-bottom: 60px !important;
+        height: calc(100% - 150px) !important; /* 60px menu + 90px submenu = 150px */
+        margin-bottom: 150px !important;
     }
     
     .blocks-young :global(.blocklyScrollbarVertical) {
