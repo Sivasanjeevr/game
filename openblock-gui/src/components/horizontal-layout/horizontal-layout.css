@@ -49,6 +49,7 @@
     background-color: $ui-white;
     overflow: hidden;
     border-right: 1px solid $ui-tertiary;
+    position: relative; /* For absolute positioning of bottom toolbox */
 }
 
 /* ========================================
@@ -244,8 +245,14 @@
    WATERMARK
    ======================================== */
 
-/* Watermark */
+/* Watermark - HIDDEN FOR YOUNG AGE */
 .watermark {
+    display: none !important; /* Hide watermark for young age */
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    /* Original styles commented out for young age
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -254,6 +261,7 @@
     border-top: 1px solid $ui-tertiary;
     background-color: $ui-white;
     flex-shrink: 0;
+    */
 }
 
 /* ========================================

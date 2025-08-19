@@ -79,6 +79,14 @@ class AgeManager {
     }
 
     /**
+     * Get the appropriate toolbox generator based on age
+     * @returns {string} 'young' or 'standard'
+     */
+    getToolboxGenerator() {
+        return this.isYoungLearner() ? 'young' : 'standard';
+    }
+
+    /**
      * Get the appropriate block style based on age
      * @returns {string} 'simple' or 'advanced'
      */

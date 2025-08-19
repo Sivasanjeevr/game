@@ -1,0 +1,647 @@
+/* Young Age (4+) Specific Toolbox Styling */
+@import "../../css/units.css";
+@import "../../css/colors.css";
+@import "../../css/z-index.css";
+
+/* ========================================
+   YOUNG LEARNERS HORIZONTAL BOTTOM TOOLBOX
+   ======================================== */
+
+/* HORIZONTAL BOTTOM TOOLBOX LAYOUT - REDUCED HEIGHT */
+.blocks-young :global(.blocklyToolboxDiv) {
+    /* Position at bottom of workspace */
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    
+    /* Horizontal layout - REDUCED HEIGHT */
+    width: 100% !important;
+    height: 80px !important; /* Reduced from 120px to 80px */
+    min-width: auto !important;
+    
+    /* Styling */
+    background: linear-gradient(to top, #e8f4fd, #f0f8ff) !important;
+    border-top: 3px solid $ui-black-transparent !important;
+    border-right: none !important;
+    border-radius: 12px 12px 0 0 !important;
+    
+    /* Horizontal scrolling if needed */
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    
+    /* Flexbox for horizontal categories */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 4px 12px !important; /* Reduced padding from 8px 16px to 4px 12px */
+    
+    /* Z-index to stay on top */
+    z-index: 1000 !important;
+}
+
+/* HORIZONTAL CATEGORY ITEMS - COLORFUL ROUNDED DESIGN */
+.blocks-young :global(.scratchCategoryMenuItem) {
+    /* Horizontal layout sizing */
+    height: 60px !important;
+    width: 80px !important; /* Slightly narrower for cleaner look */
+    min-width: 80px !important;
+    margin: 0 8px !important; /* More spacing for visual separation */
+    
+    /* Flex properties */
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Modern rounded styling */
+    border-radius: 20px !important; /* More rounded like in image */
+    border: none !important;
+    background: linear-gradient(135deg, var(--category-color, #4C97FF), var(--category-color-light, #6BB0FF)) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Category item hover effect - MODERN STYLE */
+.blocks-young :global(.scratchCategoryMenuItem:hover) {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
+    filter: brightness(1.1) !important;
+}
+
+/* Selected category highlighting - MODERN GLOW */
+.blocks-young :global(.scratchCategoryMenuItem.categorySelected) {
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(255, 255, 255, 0.8) !important;
+    filter: brightness(1.15) saturate(1.2) !important;
+}
+
+/* Add shine effect for modern look */
+.blocks-young :global(.scratchCategoryMenuItem::before) {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 50% !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%) !important;
+    border-radius: 20px 20px 0 0 !important;
+    pointer-events: none !important;
+}
+
+/* Category labels - MODERN WHITE TEXT */
+.blocks-young :global(.scratchCategoryMenuItemLabel) {
+    font-size: 0.7rem !important; /* Slightly smaller for cleaner look */
+    font-weight: 800 !important; /* Bolder for better contrast */
+    text-align: center !important;
+    line-height: 1.0 !important;
+    margin-top: 4px !important;
+    color: #ffffff !important; /* White text for colored backgrounds */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; /* Dark shadow for readability */
+    position: relative !important;
+    z-index: 2 !important; /* Above the shine effect */
+}
+
+/* HORIZONTAL FLYOUT POSITIONING - UPDATED FOR SMALLER TOOLBOX */
+.blocks-young :global(.blocklyFlyout) {
+    /* Position above the horizontal toolbox */
+    position: absolute !important;
+    bottom: 80px !important; /* Above the 80px high toolbox (reduced from 120px) */
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    
+    /* Horizontal flyout layout - KEPT SAME HEIGHT */
+    width: 100% !important;
+    height: 120px !important; /* Keep flyout height the same for block visibility */
+    
+    /* Styling */
+    background: linear-gradient(to top, #f8f8f8, #ffffff) !important;
+    border-top: 2px solid $ui-black-transparent !important;
+    border-right: none !important;
+    border-bottom: 1px solid #ddd !important;
+    border-radius: 8px 8px 0 0 !important;
+    
+    /* Horizontal scrolling */
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    
+    /* Flexbox for horizontal blocks */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 12px !important;
+    
+    /* Z-index */
+    z-index: 999 !important;
+}
+
+/* WORKSPACE ADJUSTMENT FOR BOTTOM TOOLBOX - MAXIMIZED EDITOR HEIGHT */
+.blocks-young :global(.blocklyMainBackground) {
+    /* Main workspace background - reserve space for smaller toolbox */
+    height: calc(100% - 80px) !important; /* Reduced from 120px to 80px */
+}
+
+.blocks-young :global(.blocklyWorkspaceContainer) {
+    /* Main coding editor workspace - MAXIMIZED HEIGHT */
+    height: calc(100% - 80px) !important; /* Reduced from 120px to 80px */
+    margin-bottom: 80px !important; /* Reduced from 120px to 80px */
+    /* Editor now has 40px more space! */
+}
+
+/* HIDE PROBLEMATIC SCROLLBARS FOR YOUNG AGE HORIZONTAL LAYOUT */
+.blocks-young :global(.blocklyScrollbarVertical) {
+    /* Hide vertical scrollbar that appears in middle of editor */
+    display: none !important;
+}
+
+.blocks-young :global(.blocklyScrollbarHorizontal) {
+    /* Hide horizontal scrollbar for cleaner interface */
+    display: none !important;
+}
+
+/* ALTERNATIVE: Position scrollbars properly if needed */
+.blocks-young :global(.blocklyScrollbarVertical.blocklyScrollbarVisible) {
+    /* If scrollbar is needed, position it at the edge */
+    right: 0 !important;
+    top: 0 !important;
+    height: calc(100% - 240px) !important; /* Account for toolbox + flyout */
+    z-index: 1001 !important;
+}
+
+/* MODERN FLYOUT BLOCKS STYLING - TARGET ACTUAL BLOCK ELEMENTS */
+
+/* Flyout container styling */
+.blocks-young :global(.blocklyFlyout) {
+    background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Target the actual SVG block elements in flyout */
+.blocks-young :global(.blocklyFlyout .blocklyDraggable) {
+    /* Add spacing between blocks */
+    margin-right: 20px !important;
+    margin-bottom: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hover effect for draggable blocks */
+.blocks-young :global(.blocklyFlyout .blocklyDraggable:hover) {
+    transform: translateY(-3px) scale(1.05) !important;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25)) !important;
+}
+
+/* Style ALL block elements in flyout with modern look */
+.blocks-young :global(.blocklyFlyout .blocklyPath),
+.blocks-young :global(.blocklyFlyout .blocklyBlockBackground),
+.blocks-young :global(.blocklyFlyout .blocklyHighlightedConnectionPath) {
+    /* Modern rounded appearance with shadows */
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15)) !important;
+    transition: all 0.3s ease !important;
+    stroke-width: 2px !important;
+}
+
+/* Enhanced hover effects for all block elements */
+.blocks-young :global(.blocklyFlyout .blocklyDraggable:hover .blocklyPath),
+.blocks-young :global(.blocklyFlyout .blocklyDraggable:hover .blocklyBlockBackground) {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25)) brightness(1.05) saturate(1.1) !important;
+    stroke-width: 3px !important;
+}
+
+/* Modern typography for block text */
+.blocks-young :global(.blocklyFlyout .blocklyText) {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Style the main block shapes - try CSS border-radius */
+.blocks-young :global(.blocklyFlyout .blocklyDraggable) {
+    border-radius: 15px !important;
+    overflow: visible !important; /* Ensure shadows show */
+}
+
+/* Additional modern styling for individual blocks */
+.blocks-young :global(.blocklyFlyout g.blocklyDraggable) {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12)) !important;
+    transition: filter 0.3s ease !important;
+}
+
+.blocks-young :global(.blocklyFlyout g.blocklyDraggable:hover) {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* Try to round the corners of path elements */
+.blocks-young :global(.blocklyFlyout path) {
+    border-radius: 8px !important;
+    outline: none !important;
+}
+
+/* Larger block text in workspace */
+.blocks-young :global(.blocklyText) {
+    font-size: 14px !important; /* Larger text */
+    font-weight: 500 !important;
+}
+
+/* ENHANCED BLOCK STYLING FOR YOUNG AGE - ALL BLOCKS */
+.blocks-young :global(.blocklyPath) {
+    stroke-width: 3px !important; /* Thicker, more prominent outlines */
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15)) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Enhanced hover effects for all blocks */
+.blocks-young :global(.blocklyDraggable:hover .blocklyPath) {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25)) brightness(1.05) !important;
+    stroke-width: 4px !important;
+}
+
+/* Style for block backgrounds globally */
+.blocks-young :global(.blocklyBlockBackground) {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+}
+
+/* Enhanced workspace block styling */
+.blocks-young :global(.blocklyDraggable) {
+    transition: transform 0.2s ease, filter 0.2s ease !important;
+}
+
+.blocks-young :global(.blocklyDraggable:hover) {
+    transform: scale(1.02) !important;
+    filter: brightness(1.03) !important;
+}
+
+/* Friendly rounded corners for blocks */
+.blocks-young :global(.blocklyBlockBackground) {
+    border-radius: 8px !important;
+}
+
+/* Hide complex UI elements for young learners */
+.blocks-young :global(.blocklyZoom) {
+    display: none !important; /* Hide zoom controls */
+}
+
+.blocks-young :global(.blocklyTrash) {
+    display: none !important; /* Hide trash can */
+}
+
+/* Simplified scrollbar */
+.blocks-young :global(.blocklyScrollbarHandle) {
+    fill: #4C97FF !important; /* Motion blue color */
+    border-radius: 8px !important;
+}
+
+/* MODERN CATEGORY-SPECIFIC GRADIENTS - MATCHING YOUR IMAGE */
+.blocks-young :global(.scratchCategoryMenuItem[data-id="motion"]) {
+    --category-color: #4C97FF !important;
+    --category-color-light: #6BB0FF !important;
+    background: linear-gradient(135deg, #4C97FF, #6BB0FF) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="looks"]) {
+    --category-color: #9966FF !important;
+    --category-color-light: #B388FF !important;
+    background: linear-gradient(135deg, #9966FF, #B388FF) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="sound"]) {
+    --category-color: #FFD500 !important;
+    --category-color-light: #FFDD33 !important;
+    background: linear-gradient(135deg, #FFD500, #FFDD33) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="event"]) {
+    --category-color: #FF8C1A !important;
+    --category-color-light: #FFB347 !important;
+    background: linear-gradient(135deg, #FF8C1A, #FFB347) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="control"]) {
+    --category-color: #FFAB19 !important;
+    --category-color-light: #FFC947 !important;
+    background: linear-gradient(135deg, #FFAB19, #FFC947) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="sensing"]) {
+    --category-color: #4CBFE6 !important;
+    --category-color-light: #7DD3F0 !important;
+    background: linear-gradient(135deg, #4CBFE6, #7DD3F0) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="operators"]) {
+    --category-color: #40BF4A !important;
+    --category-color-light: #66D96A !important;
+    background: linear-gradient(135deg, #40BF4A, #66D96A) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="data"]) {
+    --category-color: #FF8C1A !important;
+    --category-color-light: #FFB347 !important;
+    background: linear-gradient(135deg, #FF8C1A, #FFB347) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="procedures"]) {
+    --category-color: #FF6680 !important;
+    --category-color-light: #FF8FA3 !important;
+    background: linear-gradient(135deg, #FF6680, #FF8FA3) !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN FOR YOUNG LEARNERS
+   ======================================== */
+
+/* Tablet adjustments - MODERN RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+    .blocks-young :global(.blocklyToolboxDiv) {
+        height: 70px !important;
+        padding: 3px 8px !important;
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItem) {
+        height: 50px !important;
+        width: 70px !important; /* Slightly smaller for tablet */
+        min-width: 70px !important;
+        margin: 0 6px !important; /* Maintain spacing */
+        border-radius: 15px !important; /* Smaller radius for smaller buttons */
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItemLabel) {
+        font-size: 0.65rem !important;
+        font-weight: 800 !important; /* Keep bold */
+    }
+    
+    .blocks-young :global(.blocklyFlyout) {
+        bottom: 70px !important;
+        height: 100px !important;
+        padding: 8px !important;
+        border-radius: 12px !important; /* Smaller radius */
+    }
+    
+    .blocks-young :global(.blocklyFlyout .blocklyBlock) {
+        border-radius: 12px !important; /* Smaller radius for blocks */
+        margin-right: 12px !important;
+    }
+    
+    .blocks-young :global(.blocklyMainBackground),
+    .blocks-young :global(.blocklyWorkspaceContainer) {
+        height: calc(100% - 70px) !important;
+        margin-bottom: 70px !important;
+    }
+    
+    .blocks-young :global(.blocklyScrollbarVertical) {
+        display: none !important;
+    }
+    
+    .blocks-young :global(.blocklyScrollbarHorizontal) {
+        display: none !important;
+    }
+}
+
+/* Mobile adjustments - MODERN COMPACT DESIGN */
+@media (max-width: 768px) {
+    .blocks-young :global(.blocklyToolboxDiv) {
+        height: 60px !important;
+        padding: 2px 6px !important;
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItem) {
+        height: 45px !important;
+        width: 60px !important; /* Even more compact for mobile */
+        min-width: 60px !important;
+        margin: 0 4px !important; /* Maintain reasonable spacing */
+        border-radius: 12px !important; /* Smaller radius for mobile */
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItemLabel) {
+        font-size: 0.6rem !important; /* Smaller but readable */
+        font-weight: 800 !important; /* Keep bold */
+    }
+    
+    .blocks-young :global(.blocklyFlyout) {
+        bottom: 60px !important;
+        height: 90px !important;
+        padding: 6px !important;
+        border-radius: 10px !important; /* Smaller radius */
+    }
+    
+    .blocks-young :global(.blocklyFlyout .blocklyBlock) {
+        border-radius: 10px !important; /* Smaller radius for mobile blocks */
+        margin-right: 10px !important;
+    }
+    
+    .blocks-young :global(.blocklyFlyout .blocklyText) {
+        font-size: 11px !important; /* Smaller text for mobile */
+    }
+    
+    .blocks-young :global(.blocklyMainBackground),
+    .blocks-young :global(.blocklyWorkspaceContainer) {
+        height: calc(100% - 60px) !important;
+        margin-bottom: 60px !important;
+    }
+    
+    .blocks-young :global(.blocklyScrollbarVertical) {
+        display: none !important;
+    }
+    
+    .blocks-young :global(.blocklyScrollbarHorizontal) {
+        display: none !important;
+    }
+}
+
+/* Friendly rounded corners for blocks */
+.blocks-young :global(.blocklyBlockBackground) {
+    border-radius: 8px !important;
+}
+
+/* Hide complex UI elements for young learners */
+.blocks-young :global(.blocklyZoom) {
+    display: none !important; /* Hide zoom controls */
+}
+
+.blocks-young :global(.blocklyTrash) {
+    display: none !important; /* Hide trash can */
+}
+
+/* Simplified scrollbar */
+.blocks-young :global(.blocklyScrollbarHandle) {
+    fill: #4C97FF !important; /* Motion blue color */
+    border-radius: 8px !important;
+}
+
+/* MODERN CATEGORY-SPECIFIC GRADIENTS - MATCHING YOUR IMAGE */
+.blocks-young :global(.scratchCategoryMenuItem[data-id="motion"]) {
+    --category-color: #4C97FF !important;
+    --category-color-light: #6BB0FF !important;
+    background: linear-gradient(135deg, #4C97FF, #6BB0FF) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="looks"]) {
+    --category-color: #9966FF !important;
+    --category-color-light: #B388FF !important;
+    background: linear-gradient(135deg, #9966FF, #B388FF) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="sound"]) {
+    --category-color: #FFD500 !important;
+    --category-color-light: #FFDD33 !important;
+    background: linear-gradient(135deg, #FFD500, #FFDD33) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="event"]) {
+    --category-color: #FF8C1A !important;
+    --category-color-light: #FFB347 !important;
+    background: linear-gradient(135deg, #FF8C1A, #FFB347) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="control"]) {
+    --category-color: #FFAB19 !important;
+    --category-color-light: #FFC947 !important;
+    background: linear-gradient(135deg, #FFAB19, #FFC947) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="sensing"]) {
+    --category-color: #4CBFE6 !important;
+    --category-color-light: #7DD3F0 !important;
+    background: linear-gradient(135deg, #4CBFE6, #7DD3F0) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="operators"]) {
+    --category-color: #40BF4A !important;
+    --category-color-light: #66D96A !important;
+    background: linear-gradient(135deg, #40BF4A, #66D96A) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="data"]) {
+    --category-color: #FF8C1A !important;
+    --category-color-light: #FFB347 !important;
+    background: linear-gradient(135deg, #FF8C1A, #FFB347) !important;
+}
+
+.blocks-young :global(.scratchCategoryMenuItem[data-id="procedures"]) {
+    --category-color: #FF6680 !important;
+    --category-color-light: #FF8FA3 !important;
+    background: linear-gradient(135deg, #FF6680, #FF8FA3) !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN FOR YOUNG LEARNERS
+   ======================================== */
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+    .blocks-young :global(.scratchCategoryMenuItemLabel) {
+        font-size: 0.9rem !important;
+        padding: 6px 8px !important;
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItem) {
+        height: 50px !important;
+    }
+    
+    .blocks-young :global(.blocklyToolboxDiv) {
+        min-width: 160px !important;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .blocks-young :global(.scratchCategoryMenuItemLabel) {
+        font-size: 0.8rem !important;
+        padding: 4px 6px !important;
+    }
+    
+    .blocks-young :global(.scratchCategoryMenuItem) {
+        height: 40px !important;
+        margin: 2px 0 !important;
+    }
+    
+    .blocks-young :global(.blocklyToolboxDiv) {
+        min-width: 140px !important;
+    }
+}
+
+/* ========================================
+   SCROLLBAR REMOVAL FOR CLEAN INTERFACE
+   ======================================== */
+
+/* COMPREHENSIVE SCROLLBAR HIDING FOR YOUNG AGE */
+.blocks-young :global(.blocklyScrollbar) {
+    display: none !important; /* Hide all scrollbars */
+}
+
+.blocks-young :global(.blocklyScrollbarBackground) {
+    display: none !important; /* Hide scrollbar backgrounds */
+}
+
+.blocks-young :global(.blocklyScrollbarHandle) {
+    display: none !important; /* Hide scrollbar handles - this fixes the middle scrollbar issue */
+}
+
+.blocks-young :global(.blocklyScrollbarKnob) {
+    display: none !important; /* Hide scrollbar knobs */
+}
+
+/* Prevent scrollbar containers from taking up space */
+.blocks-young :global(.blocklyScrollbarVertical),
+.blocks-young :global(.blocklyScrollbarHorizontal) {
+    display: none !important; /* Force hide all scrollbar containers */
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Enable smooth workspace navigation without scrollbars */
+.blocks-young :global(.blocklyWorkspace) {
+    overflow: hidden !important; /* Hide native browser scrollbars */
+}
+
+/* Allow mouse wheel scrolling and touch panning for navigation */
+.blocks-young :global(.blocklyBlockCanvas) {
+    cursor: grab !important; /* Show grabbable cursor */
+}
+
+.blocks-young :global(.blocklyBlockCanvas:active) {
+    cursor: grabbing !important; /* Show grabbing cursor when dragging */
+}
+
+/* ========================================
+   HIDE WATERMARK FOR YOUNG AGE
+   ======================================== */
+
+/* Hide the sprite costume watermark for cleaner young age interface */
+.blocks-young .watermark {
+    display: none !important; /* Completely hide watermark */
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* ========================================
+   DEFAULT CATEGORY SELECTION FOR YOUNG AGE
+   ======================================== */
+
+/* Make Motion category appear selected by default */
+.blocks-young :global(.scratchCategoryMenuItem[data-id="motion"]:not(.categorySelected)) {
+    /* Visual indication that Motion is the default choice */
+    border: 2px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Enhanced styling when Motion is actually selected */
+.blocks-young :global(.scratchCategoryMenuItem[data-id="motion"].categorySelected) {
+    /* Extra emphasis for selected Motion category */
+    animation: motionPulse 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes motionPulse {
+    0% { filter: brightness(1.15) saturate(1.2); }
+    100% { filter: brightness(1.25) saturate(1.3); }
+}

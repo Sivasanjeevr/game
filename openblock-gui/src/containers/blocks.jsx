@@ -2,6 +2,8 @@ import bindAll from 'lodash.bindall';
 import debounce from 'lodash.debounce';
 import defaultsDeep from 'lodash.defaultsdeep';
 import makeToolboxXML from '../lib/make-toolbox-xml';
+import makeToolboxXMLYoung from '../lib/make-toolbox-xml-young';
+import ageManager from '../lib/age-manager.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import VMScratchBlocks from '../lib/blocks';
@@ -109,12 +111,71 @@ class Blocks extends React.Component {
         this.ScratchBlocks.Procedures.externalProcedureDefCallback = this.props.onActivateCustomProcedures;
         this.ScratchBlocks.ScratchMsgs.setLocale(this.props.locale);
 
+        // Configure workspace based on age
+        const isYoungLearner = ageManager.isYoungLearner();
+        
+        let baseConfig = {
+            rtl: this.props.isRtl, 
+            toolbox: this.props.toolboxXML
+        };
+
+        // Young learners get horizontal bottom toolbox with modern styling
+        if (isYoungLearner) {
+            baseConfig = {
+                ...baseConfig,
+                horizontalLayout: true,
+                toolboxPosition: 'bottom',
+                zoom: {
+                    controls: false,  // Hide zoom for young learners
+                    wheel: true,
+                    startScale: BLOCKS_DEFAULT_SCALE
+                },
+                trashcan: false,  // Hide trash can
+                sounds: false,    // Simplify UI
+                media: this.props.options.media,
+                // Enhanced styling for young learners
+                renderer: 'geras',  // Use modern Geras renderer if available
+                theme: {
+                    blockStyles: {
+                        motion_blocks: {
+                            colourPrimary: '#4C97FF',
+                            colourSecondary: '#3373CC',
+                            colourTertiary: '#2E5AA8'
+                        },
+                        looks_blocks: {
+                            colourPrimary: '#9966FF',
+                            colourSecondary: '#7A4ACC',
+                            colourTertiary: '#6B42A8'
+                        }
+                    },
+                    componentStyles: {
+                        workspaceBackgroundColour: '#F9F9F9',
+                        toolboxBackgroundColour: '#FFFFFF',
+                        flyoutBackgroundColour: '#F8F9FA'
+                    }
+                }
+            };
+        }
+
         const workspaceConfig = defaultsDeep({},
             Blocks.defaultOptions,
             this.props.options,
-            {rtl: this.props.isRtl, toolbox: this.props.toolboxXML}
+            baseConfig
         );
         this.workspace = this.ScratchBlocks.inject(this.blocks, workspaceConfig);
+
+        // Apply young age specific enhancements
+        if (isYoungLearner) {
+            this.applyYoungAgeEnhancements();
+            // Set Motion as default selected category for young learners
+            setTimeout(() => {
+                this.setDefaultCategory();
+            }, 300);
+            // Also retry after a longer delay to ensure it works
+            setTimeout(() => {
+                this.setDefaultCategory();
+            }, 1000);
+        }
 
         // Register buttons under new callback keys for creating variables,
         // lists, and procedures from extensions.
@@ -402,6 +463,91 @@ class Blocks extends React.Component {
             this.props.onActivateColorPicker(callback);
         }
     }
+    
+    applyYoungAgeEnhancements () {
+        // Apply modern styling to blocks for young learners
+        const applyRoundedCorners = () => {
+            // Add rounded corners to flyout blocks
+            const flyoutBlocks = document.querySelectorAll('.blocks-young .blocklyFlyout .blocklyPath');
+            flyoutBlocks.forEach(path => {
+                // Try to make SVG paths more rounded
+                path.style.strokeLinejoin = 'round';
+                path.style.strokeLinecap = 'round';
+                path.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))';
+            });
+            
+            // Apply to workspace blocks too
+            const workspaceBlocks = document.querySelectorAll('.blocks-young .blocklyPath');
+            workspaceBlocks.forEach(path => {
+                path.style.strokeLinejoin = 'round';
+                path.style.strokeLinecap = 'round';
+                path.style.strokeWidth = '3px';
+            });
+        };
+        
+        // Apply immediately and on future block additions
+        setTimeout(applyRoundedCorners, 100);
+        
+        // Listen for toolbox updates to reapply styling
+        this.workspace.addChangeListener(() => {
+            setTimeout(applyRoundedCorners, 50);
+        });
+    }
+    
+    setDefaultCategory () {
+        // Set Motion as the default selected category for young learners
+        try {
+            const toolbox = this.workspace.getToolbox();
+            if (toolbox) {
+                // Try multiple approaches to select Motion category
+                
+                // Method 1: Use toolbox API
+                if (toolbox.selectCategoryById) {
+                    toolbox.selectCategoryById('motion');
+                } else if (toolbox.setSelectedCategoryById) {
+                    toolbox.setSelectedCategoryById('motion');
+                }
+                
+                // Method 2: Try to get and click the motion category
+                const motionCategory = toolbox.getCategoryById ? toolbox.getCategoryById('motion') : null;
+                if (motionCategory && motionCategory.onClick) {
+                    motionCategory.onClick();
+                }
+                
+                // Method 3: Try DOM approach as backup
+                setTimeout(() => {
+                    this.selectMotionCategoryDirect();
+                }, 50);
+            }
+        } catch (error) {
+            console.log('Could not set default category:', error);
+            // Try DOM approach as fallback
+            this.selectMotionCategoryDirect();
+        }
+    }
+    
+    selectMotionCategoryDirect () {
+        // Direct DOM method to select Motion category
+        try {
+            // Try to find and click the Motion category button
+            const motionButton = document.querySelector('.scratchCategoryMenuItem[data-id="motion"]');
+            if (motionButton) {
+                // Add selected class first
+                const allCategories = document.querySelectorAll('.scratchCategoryMenuItem');
+                allCategories.forEach(cat => cat.classList.remove('categorySelected'));
+                motionButton.classList.add('categorySelected');
+                
+                // Then trigger click to show flyout
+                motionButton.click();
+                
+                console.log('Motion category selected successfully');
+            } else {
+                console.log('Motion category button not found');
+            }
+        } catch (error) {
+            console.log('Direct category selection failed:', error);
+        }
+    }
     getToolboxXML () {
         // Use try/catch because this requires digging pretty deep into the VM
         // Code inside intentionally ignores several error situations (no stage, etc.)
@@ -418,7 +564,11 @@ class Blocks extends React.Component {
 
             const device = this.props.deviceData.find(item => item.deviceId === this.props.deviceId);
 
-            return makeToolboxXML(false, device, target.isStage, target.id, dynamicBlocksXML,
+            // Choose toolbox generator based on age
+            const toolboxGenerator = ageManager.getToolboxGenerator();
+            const makeToolboxFunction = toolboxGenerator === 'young' ? makeToolboxXMLYoung : makeToolboxXML;
+
+            return makeToolboxFunction(false, device, target.isStage, target.id, dynamicBlocksXML,
                 this.props.isRealtimeMode,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
