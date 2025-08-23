@@ -908,7 +908,7 @@ class MenuBar extends React.Component {
                         title={`Current: ${ageManager.getCurrentAge() || 'Not set'} - Click to change`}
                     >
                         Age group: 
-                        <span style={{fontSize: '0.9rem', fontWeight: 'bold', color: '#FF8C42'}}>
+                        <span style={{fontSize: '0.9rem', fontWeight: 'bold'}}>
                             {ageManager.getCurrentAge() || 'Age?'}
                         </span>
                         <span style={{fontSize: '0.7rem', marginLeft: '4px', opacity: 0.7}}>
