@@ -42,19 +42,19 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     background: linear-gradient(135deg, #FFF8F0, #FEF6ED) !important;
     border-bottom: 1px solid #ddd !important;
     border-radius: 8px 8px 0 0 !important;
-    padding: 4px 12px !important;
+    padding: 2px 10px !important; /* tighter vertical padding */
     /* Override vertical toolbox height from blocks.css for young horizontal layout */
-    height: 50px !important;
+    height: 80px !important; 
     border-right: none !important;
 }
 
 /* HORIZONTAL CATEGORY ITEMS - COLORFUL ROUNDED DESIGN */
 .blocks-young :global(.scratchCategoryMenuItem) {
     /* Horizontal layout sizing */
-    height: 60px !important;
+    height: 48px !important; /* reduce chip height to tighten spacing */
     width: 80px !important; /* Slightly narrower for cleaner look */
     min-width: 80px !important;
-    margin: 0 8px !important; /* More spacing for visual separation */
+    margin: 0 6px !important; /* Slightly less horizontal spacing */
     
     /* Flex properties */
     flex-shrink: 0 !important;
@@ -64,7 +64,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     justify-content: center !important;
     
     /* Modern rounded styling */
-    border-radius: 20px !important; /* More rounded like in image */
+    border-radius: 16px !important; /* Adjust radius for reduced height */
     border: none !important;
     background: linear-gradient(135deg, var(--category-color, #FF8C42), var(--category-color-light, #FF7A2E)) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
@@ -103,15 +103,20 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 
 /* Category labels - MODERN WHITE TEXT */
 .blocks-young :global(.scratchCategoryMenuItemLabel) {
-    font-size: 0.7rem !important; /* Slightly smaller for cleaner look */
+    font-size: 0.68rem !important; /* Slightly smaller for tighter chip */
     font-weight: 800 !important; /* Bolder for better contrast */
     text-align: center !important;
     line-height: 1.0 !important;
-    margin-top: 4px !important;
+    margin-top: 2px !important; /* reduce internal label spacing */
     color: #ffffff !important; /* White text for colored backgrounds */
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; /* Dark shadow for readability */
     position: relative !important;
     z-index: 2 !important; /* Above the shine effect */
+}
+
+/* Reduce space between flyout and category bar */
+.blocks-young :global(.blocklyFlyout) {
+    margin-top: -4px !important; /* subtle visual alignment */
 }
 
 /* HORIZONTAL FLYOUT POSITIONING - SUBMENU AT THE BOTTOM */
@@ -237,10 +242,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     transition: transform 0.2s ease, filter 0.2s ease !important;
 }
 
-.blocks-young :global(.blocklyDraggable:hover) {
-    /* transform: scale(1.02) !important; */
-    /* filter: brightness(1.03) !important; */
-}
+/* Removed empty hover rules to satisfy linters */
 
 /* Friendly rounded corners for blocks */
 .blocks-young :global(.blocklyBlockBackground) {

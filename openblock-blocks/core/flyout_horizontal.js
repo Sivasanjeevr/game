@@ -56,6 +56,13 @@ Blockly.HorizontalFlyout = function(workspaceOptions) {
    * @private
    */
   this.horizontalLayout_ = true;
+  /**
+   * Reduce internal padding to tighten gap between chips and blocks
+   * for horizontal (age 4+) layout only.
+   * Instance-level override so vertical flyouts remain unchanged.
+   * @type {number}
+   */
+  this.MARGIN = 6;
 };
 goog.inherits(Blockly.HorizontalFlyout, Blockly.Flyout);
 

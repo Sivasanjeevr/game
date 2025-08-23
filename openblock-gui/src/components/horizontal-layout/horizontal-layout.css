@@ -116,7 +116,7 @@
     border: none;
     border-bottom: 3px solid transparent;
     background-color: transparent;
-    color: $ui-tertiary;
+    color: $text-primary;
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.8rem; /* Slightly larger font for better readability */
