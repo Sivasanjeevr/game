@@ -18,7 +18,7 @@ const categories = {
     sensing: '#5CB1D6',
     sound: '#CF63CF',
     looks: '#9966FF',
-    motion: '#4C97FF',
+    motion: '#FF8C42',
     list: '#FC662C',
     extension: '#0FBD8C'
 };

@@ -39,7 +39,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 /* HORIZONTAL TOOLBOX LAYOUT - MENU ABOVE SUBMENU */
 .blocks-young :global(.blocklyToolboxDiv) {
     /* Visual-only styling; do not override layout to keep drag/drop intact */
-    background: linear-gradient(to top, #e8f4fd, #f0f8ff) !important;
+    background: linear-gradient(135deg, #FFF8F0, #FEF6ED) !important;
     border-bottom: 1px solid #ddd !important;
     border-radius: 8px 8px 0 0 !important;
     padding: 4px 12px !important;
@@ -66,7 +66,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     /* Modern rounded styling */
     border-radius: 20px !important; /* More rounded like in image */
     border: none !important;
-    background: linear-gradient(135deg, var(--category-color, #4C97FF), var(--category-color-light, #6BB0FF)) !important;
+    background: linear-gradient(135deg, var(--category-color, #FF8C42), var(--category-color-light, #FF7A2E)) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
@@ -117,7 +117,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 /* HORIZONTAL FLYOUT POSITIONING - SUBMENU AT THE BOTTOM */
 .blocks-young :global(.blocklyFlyout) {
     /* Visual-only styling; rely on Blockly horizontal flyout behavior */
-    background: linear-gradient(to bottom, #f8f8f8, #ffffff) !important;
+    background: linear-gradient(135deg, #F8F9FA, #FFFFFF) !important;
     border-radius: 0 0 12px 12px !important;
     border-top: 1px solid #ddd !important;
 }
@@ -141,7 +141,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 
 /* Flyout container styling */
 .blocks-young :global(.blocklyFlyout) {
-    background: linear-gradient(135deg, #f8f9fa, #ffffff) !important;
+    background: linear-gradient(135deg, #F8F9FA, #FFFFFF) !important;
     border-radius: 15px !important;
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
@@ -257,15 +257,15 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 
 /* Simplified scrollbar */
 .blocks-young :global(.blocklyScrollbarHandle) {
-    fill: #4C97FF !important; /* Motion blue color */
+    fill: #FF8C42 !important; /* Motion orange color */
     border-radius: 8px !important;
 }
 
 /* MODERN CATEGORY-SPECIFIC GRADIENTS - MATCHING YOUR IMAGE */
 .blocks-young :global(.scratchCategoryMenuItem[data-id="motion"]) {
-    --category-color: #4C97FF !important;
-    --category-color-light: #6BB0FF !important;
-    background: linear-gradient(135deg, #4C97FF, #6BB0FF) !important;
+    --category-color: #FF8C42 !important;
+    --category-color-light: #FF7A2E !important;
+    background: linear-gradient(135deg, #FF8C42, #FF7A2E) !important;
 }
 
 .blocks-young :global(.scratchCategoryMenuItem[data-id="looks"]) {

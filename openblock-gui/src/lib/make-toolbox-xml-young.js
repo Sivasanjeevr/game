@@ -16,7 +16,7 @@ const motion = function (isInitialSetup, isStage, targetId) {
         'Stage selected: no motion blocks'
     );
     return `
-    <category name="%{BKY_CATEGORY_MOTION}" id="motion" colour="#4C97FF" secondaryColour="#3373CC">
+    <category name="%{BKY_CATEGORY_MOTION}" id="motion" colour="#FF8C42" secondaryColour="#FF7A2E">
         ${isStage ? `
         <label text="${stageSelected}"></label>
         ` : `

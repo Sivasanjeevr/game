@@ -57,8 +57,8 @@ const UpdateModalComponent = props => {
     const progressBar = value => (
         <ProgressBar
             completed={value}
-            bgColor="#4C97FF"
-            baseBgColor="#D9E3F2"
+            bgColor="#FF8C42"
+            baseBgColor="#FEF6ED"
             height="15px"
         />
     );

@@ -140,9 +140,9 @@ class Blocks extends React.Component {
                 theme: {
                     blockStyles: {
                         motion_blocks: {
-                            colourPrimary: '#4C97FF',
-                            colourSecondary: '#3373CC',
-                            colourTertiary: '#2E5AA8'
+                            colourPrimary: '#FF8C42',
+                            colourSecondary: '#FF7A2E',
+                            colourTertiary: '#CC5F1E'
                         },
                         looks_blocks: {
                             colourPrimary: '#9966FF',
