@@ -120,6 +120,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
     background: linear-gradient(135deg, #F8F9FA, #FFFFFF) !important;
     border-radius: 0 0 12px 12px !important;
     border-top: 1px solid #ddd !important;
+    height: 6
 }
 
 /* WORKSPACE ADJUSTMENT FOR MENU + SUBMENU - MAXIMIZED EDITOR HEIGHT */
