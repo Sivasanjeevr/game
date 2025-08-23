@@ -20,7 +20,6 @@ const motion = function (isInitialSetup, isStage, targetId) {
         ${isStage ? `
         <label text="${stageSelected}"></label>
         ` : `
-        <!-- SIMPLIFIED MOTION BLOCKS FOR YOUNG LEARNERS -->
         <block type="motion_movesteps">
             <value name="STEPS">
                 <shadow type="math_number">
@@ -43,18 +42,103 @@ const motion = function (isInitialSetup, isStage, targetId) {
             </value>
         </block>
         ${blockSeparator}
-        <!-- Simplified positioning blocks -->
         <block type="motion_goto">
             <value name="TO">
                 <shadow type="motion_goto_menu">
                 </shadow>
             </value>
         </block>
-        <!-- Remove complex blocks like glideto, pointindirection for young learners -->
+        <block type="motion_gotoxy">
+            <value name="X">
+                <shadow id="movex" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow id="movey" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_glideto" id="motion_glideto">
+            <value name="SECS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="motion_glideto_menu">
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_glidesecstoxy">
+            <value name="SECS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="X">
+                <shadow id="glidex" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow id="glidey" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        ${blockSeparator}
+        <block type="motion_pointindirection">
+            <value name="DIRECTION">
+                <shadow type="math_angle">
+                    <field name="NUM">90</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_pointtowards">
+            <value name="TOWARDS">
+                <shadow type="motion_pointtowards_menu">
+                </shadow>
+            </value>
+        </block>
+        ${blockSeparator}
+        <block type="motion_changexby">
+            <value name="DX">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_setx">
+            <value name="X">
+                <shadow id="setx" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_changeyby">
+            <value name="DY">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_sety">
+            <value name="Y">
+                <shadow id="sety" type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        ${blockSeparator}
+        <block type="motion_ifonedgebounce"/>
+        ${blockSeparator}
+        <block type="motion_setrotationstyle"/>
         ${blockSeparator}
         <block id="${targetId}_xposition" type="motion_xposition"/>
         <block id="${targetId}_yposition" type="motion_yposition"/>
-        `}
+        <block id="${targetId}_direction" type="motion_direction"/>`}
         ${categorySeparator}
     </category>
     `;
@@ -78,11 +162,34 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
     return `
     <category name="%{BKY_CATEGORY_LOOKS}" id="looks" colour="#9966FF" secondaryColour="#774DCB">
         ${isStage ? '' : `
-        <!-- SIMPLIFIED LOOKS BLOCKS FOR YOUNG LEARNERS -->
+        <block type="looks_sayforsecs">
+            <value name="MESSAGE">
+                <shadow type="text">
+                    <field name="TEXT">${hello}</field>
+                </shadow>
+            </value>
+            <value name="SECS">
+                <shadow type="math_number">
+                    <field name="NUM">2</field>
+                </shadow>
+            </value>
+        </block>
         <block type="looks_say">
             <value name="MESSAGE">
                 <shadow type="text">
                     <field name="TEXT">${hello}</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_thinkforsecs">
+            <value name="MESSAGE">
+                <shadow type="text">
+                    <field name="TEXT">${hmm}</field>
+                </shadow>
+            </value>
+            <value name="SECS">
+                <shadow type="math_number">
+                    <field name="NUM">2</field>
                 </shadow>
             </value>
         </block>
@@ -96,8 +203,14 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
         ${blockSeparator}
         `}
         ${isStage ? `
-            <!-- Stage backdrop blocks -->
             <block type="looks_switchbackdropto">
+                <value name="BACKDROP">
+                    <shadow type="looks_backdrops">
+                        <field name="BACKDROP">${backdropName}</field>
+                    </shadow>
+                </value>
+            </block>
+            <block type="looks_switchbackdroptoandwait">
                 <value name="BACKDROP">
                     <shadow type="looks_backdrops">
                         <field name="BACKDROP">${backdropName}</field>
@@ -106,8 +219,7 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
             </block>
             <block type="looks_nextbackdrop"/>
         ` : `
-            <!-- Sprite costume blocks - simplified -->
-            <block type="looks_switchcostumeto">
+            <block id="${targetId}_switchcostumeto" type="looks_switchcostumeto">
                 <value name="COSTUME">
                     <shadow type="looks_costume">
                         <field name="COSTUME">${costumeName}</field>
@@ -115,19 +227,15 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
                 </value>
             </block>
             <block type="looks_nextcostume"/>
-            ${blockSeparator}
-            <!-- Simplified show/hide -->
-            <block type="looks_show"/>
-            <block type="looks_hide"/>
-            ${blockSeparator}
-            <!-- Basic size blocks -->
-            <block type="looks_setsizeto">
-                <value name="SIZE">
-                    <shadow type="math_number">
-                        <field name="NUM">100</field>
+            <block type="looks_switchbackdropto">
+                <value name="BACKDROP">
+                    <shadow type="looks_backdrops">
+                        <field name="BACKDROP">${backdropName}</field>
                     </shadow>
                 </value>
             </block>
+            <block type="looks_nextbackdrop"/>
+            ${blockSeparator}
             <block type="looks_changesizeby">
                 <value name="CHANGE">
                     <shadow type="math_number">
@@ -135,7 +243,37 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
                     </shadow>
                 </value>
             </block>
-            <!-- Remove complex visual effects for young learners -->
+            <block type="looks_setsizeto">
+                <value name="SIZE">
+                    <shadow type="math_number">
+                        <field name="NUM">100</field>
+                    </shadow>
+                </value>
+            </block>
+        `}
+        ${blockSeparator}
+        <block type="looks_changeeffectby">
+            <value name="CHANGE">
+                <shadow type="math_number">
+                    <field name="NUM">25</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_seteffectto">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_cleargraphiceffects"/>
+        ${blockSeparator}
+        ${isStage ? `
+            <block id="backdropnumbername" type="looks_backdropnumbername"/>
+        ` : `
+            <block id="${targetId}_costumenumbername" type="looks_costumenumbername"/>
+            <block id="backdropnumbername" type="looks_backdropnumbername"/>
+            <block id="${targetId}_size" type="looks_size"/>
         `}
         ${categorySeparator}
     </category>

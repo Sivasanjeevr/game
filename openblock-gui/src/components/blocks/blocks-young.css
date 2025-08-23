@@ -38,37 +38,14 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 
 /* HORIZONTAL TOOLBOX LAYOUT - MENU ABOVE SUBMENU */
 .blocks-young :global(.blocklyToolboxDiv) {
-    /* Position above the flyout - menu comes first */
-    position: absolute !important;
-    bottom: 120px !important; /* Above the 120px high flyout */
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    
-    /* Horizontal layout - MENU HEIGHT */
-    width: 100% !important;
-    height: 80px !important;
-    min-width: auto !important;
-    
-    /* Styling */
+    /* Visual-only styling; do not override layout to keep drag/drop intact */
     background: linear-gradient(to top, #e8f4fd, #f0f8ff) !important;
-    border-top: 3px solid $ui-black-transparent !important;
     border-bottom: 1px solid #ddd !important;
-    border-right: none !important;
-    border-radius: 8px 8px 0 0 !important; /* Rounded top corners */
-    
-    /* Horizontal scrolling if needed */
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    
-    /* Flexbox for horizontal categories */
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
+    border-radius: 8px 8px 0 0 !important;
     padding: 4px 12px !important;
-    
-    /* Z-index - lower to allow modals to appear on top */
-    z-index: 100 !important;
+    /* Override vertical toolbox height from blocks.css for young horizontal layout */
+    height: 50px !important;
+    border-right: none !important;
 }
 
 /* HORIZONTAL CATEGORY ITEMS - COLORFUL ROUNDED DESIGN */
@@ -139,61 +116,17 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
 
 /* HORIZONTAL FLYOUT POSITIONING - SUBMENU AT THE BOTTOM */
 .blocks-young :global(.blocklyFlyout) {
-    /* Position at the very bottom - submenu comes last */
-    position: absolute !important;
-    bottom: 0 !important; /* At the bottom of workspace */
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    
-    /* Horizontal flyout layout - SUBMENU HEIGHT */
-    width: 100% !important;
-    height: 120px !important;
-    
-    /* Styling */
+    /* Visual-only styling; rely on Blockly horizontal flyout behavior */
     background: linear-gradient(to bottom, #f8f8f8, #ffffff) !important;
-    border-top: 2px solid $ui-black-transparent !important;
-    border-right: none !important;
-    border-bottom: none !important;
-    border-radius: 0 0 12px 12px !important; /* Rounded bottom corners */
-    
-    /* Horizontal scrolling */
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    
-    /* Flexbox for horizontal blocks */
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    padding: 12px !important;
-    
-    /* Z-index - lower to allow modals to appear on top */
-    z-index: 99 !important;
+    border-radius: 0 0 12px 12px !important;
+    border-top: 1px solid #ddd !important;
 }
 
 /* WORKSPACE ADJUSTMENT FOR MENU + SUBMENU - MAXIMIZED EDITOR HEIGHT */
-.blocks-young :global(.blocklyMainBackground) {
-    /* Main workspace background - reserve space for menu (80px) + submenu (120px) */
-    height: calc(100% - 200px) !important; /* Total: 80px menu + 120px submenu = 200px */
-}
-
-.blocks-young :global(.blocklyWorkspaceContainer) {
-    /* Main coding editor workspace - adjusted for new layout */
-    height: calc(100% - 200px) !important; /* Total: 80px menu + 120px submenu = 200px */
-    margin-bottom: 200px !important; /* Space for menu + submenu */
-    /* Editor workspace properly positioned above both menu and submenu */
-}
+/* Use Blockly's default sizing; do not override workspace geometry */
 
 /* HIDE PROBLEMATIC SCROLLBARS FOR YOUNG AGE HORIZONTAL LAYOUT */
-.blocks-young :global(.blocklyScrollbarVertical) {
-    /* Hide vertical scrollbar that appears in middle of editor */
-    display: none !important;
-}
-
-.blocks-young :global(.blocklyScrollbarHorizontal) {
-    /* Hide horizontal scrollbar for cleaner interface */
-    display: none !important;
-}
+/* Keep scrollbars enabled for correct dragging/scrolling */
 
 /* ALTERNATIVE: Position scrollbars properly if needed */
 .blocks-young :global(.blocklyScrollbarVertical.blocklyScrollbarVisible) {
@@ -420,11 +353,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
         margin-right: 12px !important;
     }
     
-    .blocks-young :global(.blocklyMainBackground),
-    .blocks-young :global(.blocklyWorkspaceContainer) {
-        height: calc(100% - 170px) !important; /* 70px menu + 100px submenu = 170px */
-        margin-bottom: 170px !important;
-    }
+    /* Use default workspace sizing on tablets */
     
     .blocks-young :global(.blocklyScrollbarVertical) {
         display: none !important;
@@ -472,11 +401,7 @@ body:has(.ageSelectionOverlay) .blocks-young :global(.blocklyFlyout) {
         font-size: 11px !important; /* Smaller text for mobile */
     }
     
-    .blocks-young :global(.blocklyMainBackground),
-    .blocks-young :global(.blocklyWorkspaceContainer) {
-        height: calc(100% - 150px) !important; /* 60px menu + 90px submenu = 150px */
-        margin-bottom: 150px !important;
-    }
+    /* Use default workspace sizing on mobile */
     
     .blocks-young :global(.blocklyScrollbarVertical) {
         display: none !important;

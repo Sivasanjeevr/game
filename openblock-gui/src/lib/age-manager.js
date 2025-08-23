@@ -83,7 +83,9 @@ class AgeManager {
      * @returns {string} 'young' or 'standard'
      */
     getToolboxGenerator() {
-        return this.isYoungLearner() ? 'young' : 'standard';
+        // Use the standard toolbox for all ages to preserve full functionality.
+        // 4+ differences are applied via layout/styling only (horizontal, scrollable).
+        return 'standard';
     }
 
     /**

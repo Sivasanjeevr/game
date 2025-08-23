@@ -124,7 +124,9 @@ class Blocks extends React.Component {
             baseConfig = {
                 ...baseConfig,
                 horizontalLayout: true,
-                toolboxPosition: 'bottom',
+                // In horizontal layout, Blockly expects 'start' or 'end'.
+                // Use 'end' to place the toolbox/flyout at the bottom.
+                toolboxPosition: 'end',
                 zoom: {
                     controls: false,  // Hide zoom for young learners
                     wheel: true,

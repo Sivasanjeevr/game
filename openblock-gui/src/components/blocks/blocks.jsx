@@ -22,7 +22,7 @@ const BlocksComponent = props => {
                 styles.blocks,
                 {
                     [styles.dragOver]: dragOver,
-                    [stylesYoung.blocksYoung]: isYoungLearner
+                    [stylesYoung['blocks-young']]: isYoungLearner
                 }
             )}
             {...componentProps}
