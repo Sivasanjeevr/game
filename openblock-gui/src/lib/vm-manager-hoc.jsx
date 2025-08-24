@@ -40,10 +40,9 @@ const vmManagerHOC = function (WrappedComponent) {
             }
         }
         componentDidUpdate (prevProps) {
-            // if project is in loading state, AND fonts are loaded,
-            // and they weren't both that way until now... load project!
-            if (this.props.isLoadingWithId && this.props.fontsLoaded &&
-                (!prevProps.isLoadingWithId || !prevProps.fontsLoaded)) {
+            // If project is in loading state and it just changed, load the project
+            // Don't block on fontsLoaded to avoid first-load hangs
+            if (this.props.isLoadingWithId && !prevProps.isLoadingWithId) {
                 this.loadProject();
             }
             // Start the VM if entering editor mode with an unstarted vm
@@ -52,6 +51,8 @@ const vmManagerHOC = function (WrappedComponent) {
             }
         }
         loadProject () {
+            // Load the project even if the renderer has not been attached yet.
+            // Stage will attach the renderer asynchronously; once available we will draw.
             return this.props.vm.loadProject(this.props.projectData)
                 .then(() => {
                     this.props.onLoadedProject(this.props.loadingState, this.props.canSave);
@@ -66,8 +67,12 @@ const vmManagerHOC = function (WrappedComponent) {
                     // before the VM starts running other hat blocks.
                     if (!this.props.isStarted) {
                         // Wrap in a setTimeout because skin loading in
-                        // the renderer can be async.
-                        setTimeout(() => this.props.vm.renderer.draw());
+                        // the renderer can be async. Draw only if renderer exists.
+                        setTimeout(() => {
+                            if (this.props.vm && this.props.vm.renderer) {
+                                try { this.props.vm.renderer.draw(); } catch (e) { /* noop */ }
+                            }
+                        });
                     }
                 })
                 .catch(e => {

@@ -75,6 +75,16 @@ class Stage extends React.Component {
         this.attachMouseEvents(this.canvas);
         this.updateRect();
         this.props.vm.runtime.addListener('QUESTION', this.questionListener);
+        // Ensure the renderer draws once the Stage is mounted.
+        // This fixes a first-load case where the project may have loaded
+        // before the Stage attached a renderer, leaving the stage white
+        // until a refresh or subsequent interaction.
+        if (this.props.vm && this.props.vm.renderer) {
+            // Defer to next tick to allow any pending skins to finish attaching.
+            setTimeout(() => {
+                try { this.props.vm.renderer.draw(); } catch (e) { /* noop */ }
+            }, 0);
+        }
     }
     shouldComponentUpdate (nextProps, nextState) {
         return this.props.stageSize !== nextProps.stageSize ||

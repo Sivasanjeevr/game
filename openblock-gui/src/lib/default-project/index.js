@@ -1,11 +1,11 @@
 import projectData from './project-data';
 
 /* eslint-disable import/no-unresolved */
-import popWav from '!arraybuffer-loader!./83a9787d4cb6f3b7632b4ddfebf74367.wav';
-import meowWav from '!arraybuffer-loader!./4e080acae1c3dc65eef30f07c2b0d4a5.wav';
-import backdrop from '!raw-loader!./cd21514d0531fdffb22204e0ec5ed84a.svg';
-import costume1 from '!raw-loader!./5de48e72637db4d7fc7f6bb526354114.svg';
-import costume2 from '!raw-loader!./48bbc82a10af3d0e0b7d5c677097df0e.svg';
+import popWav from '!arraybuffer-loader?esModule=false!./83a9787d4cb6f3b7632b4ddfebf74367.wav';
+import meowWav from '!arraybuffer-loader?esModule=false!./4e080acae1c3dc65eef30f07c2b0d4a5.wav';
+import backdrop from '!raw-loader?esModule=false!./cd21514d0531fdffb22204e0ec5ed84a.svg';
+import costume1 from '!raw-loader?esModule=false!./5de48e72637db4d7fc7f6bb526354114.svg';
+import costume2 from '!raw-loader?esModule=false!./48bbc82a10af3d0e0b7d5c677097df0e.svg';
 /* eslint-enable import/no-unresolved */
 
 const defaultProject = translator => {
