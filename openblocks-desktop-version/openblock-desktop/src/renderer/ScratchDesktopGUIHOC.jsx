@@ -6,7 +6,7 @@ import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
-import GUIComponent from 'openblock-gui/src/components/gui/gui.jsx';
+import GUIComponent from 'openblock-gui/src/containers/gui.jsx';
 import {FormattedMessage} from 'react-intl';
 
 import {
@@ -49,7 +49,8 @@ const ScratchDesktopGUIHOC = function (WrappedComponent) {
                 'handleSetTitleFromSave',
                 'handleShowMessageBox',
                 'handleStorageInit',
-                'handleUpdateProjectTitle'
+                'handleUpdateProjectTitle',
+                'flushRenderer'
             ]);
             this.props.onLoadingStarted();
             ipcRenderer.invoke('get-initial-project-data').then(async initialProjectData => {
@@ -100,6 +101,16 @@ const ScratchDesktopGUIHOC = function (WrappedComponent) {
             navigator.clipboard.readText = () => Promise.resolve(clipboard.readText());
 
             ipcRenderer.on('setTitleFromSave', this.handleSetTitleFromSave);
+            // Force a layout/renderer refresh once the window is ready to show to
+            // avoid rare blank stage on first paint under software GL.
+            ipcRenderer.on('ready-to-show', () => {
+                try {
+                    window.dispatchEvent(new Event('resize'));
+                    if (this.props.vm && this.props.vm.renderer && this.props.vm.renderer.draw) {
+                        this.props.vm.renderer.draw();
+                    }
+                } catch (_) {}
+            });
             ipcRenderer.on('setUpdate', (event, args) => {
                 this.props.onSetUpdate(args);
             });
@@ -111,9 +122,28 @@ const ScratchDesktopGUIHOC = function (WrappedComponent) {
             ipcRenderer.on('setPlatform', (event, args) => {
                 this.platform = args;
             });
+
+            // Ensure new sprites force a render flush
+            if (this.props.vm && this.props.vm.runtime) {
+                this.props.vm.runtime.on('SPRITE_INFO_REPORT', this.flushRenderer);
+                this.props.vm.runtime.on('PROJECT_LOADED', this.flushRenderer);
+                this.props.vm.runtime.on('TARGETS_UPDATE', this.flushRenderer);
+            }
         }
         componentWillUnmount () {
             ipcRenderer.removeListener('setTitleFromSave', this.handleSetTitleFromSave);
+            if (this.props.vm && this.props.vm.runtime) {
+                this.props.vm.runtime.off('SPRITE_INFO_REPORT', this.flushRenderer);
+                this.props.vm.runtime.off('PROJECT_LOADED', this.flushRenderer);
+                this.props.vm.runtime.off('TARGETS_UPDATE', this.flushRenderer);
+            }
+        }
+        flushRenderer () {
+            try {
+                if (this.props.vm && this.props.vm.renderer && this.props.vm.renderer.draw) {
+                    this.props.vm.renderer.draw();
+                }
+            } catch (_) {}
         }
         handleClickAbout () {
             ipcRenderer.send('open-about-window');
@@ -143,6 +173,12 @@ const ScratchDesktopGUIHOC = function (WrappedComponent) {
             this.handleUpdateProjectTitle(args.title);
         }
         handleStorageInit (storageInstance) {
+            try {
+                // Ensure the standard web stores are available (CDN for md5 assets/projects)
+                if (typeof storageInstance.addOfficialScratchWebStores === 'function') {
+                    storageInstance.addOfficialScratchWebStores();
+                }
+            } catch (_) {}
             storageInstance.addHelper(new ElectronStorageHelper(storageInstance));
         }
         handleUpdateProjectTitle (newTitle) {
@@ -185,6 +221,7 @@ const ScratchDesktopGUIHOC = function (WrappedComponent) {
                 canEditTitle
                 canModifyCloudData={false}
                 canSave={false}
+                canShowEdit={false}
                 isScratchDesktop
                 onClickAbout={[
                     {

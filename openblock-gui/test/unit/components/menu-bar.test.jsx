@@ -20,13 +20,35 @@ describe('MenuBar Component', () => {
             projectState: {
                 loadingState: LoadingState.NOT_LOADED
             },
+            programMode: {
+                isRealtimeMode: false
+            },
+            toolbox: {
+                isToolboxUpdating: false
+            },
+            connectionModal: {
+                realtimeConnection: false,
+                peripheralName: null
+            },
+            stageSize: {
+                stageSize: 'large'
+            },
+            device: {
+                deviceId: null,
+                deviceName: null
+            },
             vm: new VM()
         }
     });
 
     const getComponent = function (props = {}) {
-        return <Provider store={store}><MenuBar {...props} /></Provider>;
-    };
+        const defaultProps = {
+            isRealtimeMode: false,
+            onShowMessageBox: () => {},
+            ...props
+        };
+        return <Provider store={store}><MenuBar {...defaultProps} /></Provider>;
+    };  
 
     test('menu bar with no About handler has no About button', () => {
         const menuBar = mountWithIntl(getComponent());
@@ -48,5 +70,17 @@ describe('MenuBar Component', () => {
         expect(onClickAbout).toHaveBeenCalledTimes(0);
         button.simulate('click');
         expect(onClickAbout).toHaveBeenCalledTimes(1);
+    });
+
+    test('Edit menu is hidden when canShowEdit is false', () => {
+        const menuBar = mountWithIntl(getComponent({canShowEdit: false}));
+        const editMenu = menuBar.findWhere(node => node.text() === 'Edit');
+        expect(editMenu.exists()).toBe(false);
+    });
+
+    test('Edit menu is shown when canShowEdit is true', () => {
+        const menuBar = mountWithIntl(getComponent({canShowEdit: true}));
+        const editMenu = menuBar.findWhere(node => node.text() === 'Edit');
+        expect(editMenu.exists()).toBe(true);
     });
 });

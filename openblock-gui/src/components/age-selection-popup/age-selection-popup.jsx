@@ -11,7 +11,7 @@ const AgeSelectionPopup = ({
     onClose,
     intl
 }) => {
-    const handleAgeSelect = (ageGroup) => {
+    const handleAgeSelect = ageGroup => {
         onAgeSelect(ageGroup);
     };
 
@@ -23,10 +23,16 @@ const AgeSelectionPopup = ({
 
     // Use createPortal to render popup at document root level, avoiding z-index stacking context issues
     return createPortal(
-        <div className={styles.ageSelectionOverlay} onClick={handleClose}>
-            <div className={styles.ageSelectionPopup} onClick={(e) => e.stopPropagation()}>
+        <div
+            className={styles.ageSelectionOverlay}
+            onClick={handleClose}
+        >
+            <div
+                className={styles.ageSelectionPopup}
+                onClick={e => e.stopPropagation()}
+            >
                 <div className={styles.popupHeader}>
-                    <button 
+                    <button
                         className={styles.closeButton}
                         onClick={handleClose}
                         aria-label="Close popup"
@@ -42,7 +48,7 @@ const AgeSelectionPopup = ({
                 </div>
 
                 <div className={styles.ageOptions}>
-                    <div 
+                    <div
                         className={styles.ageOption}
                         onClick={() => handleAgeSelect('4+')}
                     >
@@ -52,7 +58,7 @@ const AgeSelectionPopup = ({
                         <div className={styles.ageContent}>
                             <h3 className={styles.ageTitle}>Young Learners</h3>
                             <p className={styles.ageDescription}>
-                                Simple, intuitive blocks arranged horizontally. 
+                                Simple, intuitive blocks arranged horizontally.
                                 Perfect for beginners and young children.
                             </p>
                         </div>
@@ -61,7 +67,7 @@ const AgeSelectionPopup = ({
                         </div>
                     </div>
 
-                    <div 
+                    <div
                         className={styles.ageOption}
                         onClick={() => handleAgeSelect('7+')}
                     >
@@ -71,7 +77,7 @@ const AgeSelectionPopup = ({
                         <div className={styles.ageContent}>
                             <h3 className={styles.ageTitle}>Older Learners</h3>
                             <p className={styles.ageDescription}>
-                                Advanced blocks with vertical layout. 
+                                Advanced blocks with vertical layout.
                                 More features and complex programming concepts.
                             </p>
                         </div>

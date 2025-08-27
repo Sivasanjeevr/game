@@ -82,7 +82,9 @@ class Stage extends React.Component {
         if (this.props.vm && this.props.vm.renderer) {
             // Defer to next tick to allow any pending skins to finish attaching.
             setTimeout(() => {
-                try { this.props.vm.renderer.draw(); } catch (e) { /* noop */ }
+                try {
+                    this.props.vm.renderer.draw();
+                } catch (e) { /* noop */ }
             }, 0);
         }
     }

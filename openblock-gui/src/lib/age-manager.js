@@ -10,7 +10,7 @@ const AGE_GROUPS = {
 };
 
 class AgeManager {
-    constructor() {
+    constructor () {
         this.currentAge = this.getStoredAge();
         this.listeners = [];
     }
@@ -19,7 +19,7 @@ class AgeManager {
      * Get the currently selected age group
      * @returns {string} The age group ('4+' or '7+')
      */
-    getCurrentAge() {
+    getCurrentAge () {
         return this.currentAge;
     }
 
@@ -27,7 +27,7 @@ class AgeManager {
      * Set the age group and notify listeners
      * @param {string} ageGroup - The age group to set ('4+' or '7+')
      */
-    setAge(ageGroup) {
+    setAge (ageGroup) {
         if (!Object.values(AGE_GROUPS).includes(ageGroup)) {
             console.warn(`Invalid age group: ${ageGroup}`);
             return;
@@ -42,7 +42,7 @@ class AgeManager {
      * Check if user has selected an age group
      * @returns {boolean} True if age is selected
      */
-    hasAgeSelected() {
+    hasAgeSelected () {
         return !!this.currentAge;
     }
 
@@ -50,7 +50,7 @@ class AgeManager {
      * Check if current age is young learners (4+)
      * @returns {boolean} True if age is 4+
      */
-    isYoungLearner() {
+    isYoungLearner () {
         return this.currentAge === AGE_GROUPS.YOUNG;
     }
 
@@ -58,7 +58,7 @@ class AgeManager {
      * Check if current age is older learners (7+)
      * @returns {boolean} True if age is 7+
      */
-    isOlderLearner() {
+    isOlderLearner () {
         return this.currentAge === AGE_GROUPS.OLDER;
     }
 
@@ -66,7 +66,7 @@ class AgeManager {
      * Get the appropriate layout type based on age
      * @returns {string} 'horizontal' or 'vertical'
      */
-    getLayoutType() {
+    getLayoutType () {
         return this.isYoungLearner() ? 'horizontal' : 'vertical';
     }
 
@@ -74,7 +74,7 @@ class AgeManager {
      * Get the appropriate toolbox type based on age
      * @returns {string} 'horizontal' or 'vertical'
      */
-    getToolboxType() {
+    getToolboxType () {
         return this.isYoungLearner() ? 'horizontal' : 'vertical';
     }
 
@@ -82,7 +82,7 @@ class AgeManager {
      * Get the appropriate toolbox generator based on age
      * @returns {string} 'young' or 'standard'
      */
-    getToolboxGenerator() {
+    getToolboxGenerator () {
         // Use the standard toolbox for all ages to preserve full functionality.
         // 4+ differences are applied via layout/styling only (horizontal, scrollable).
         return 'standard';
@@ -92,7 +92,7 @@ class AgeManager {
      * Get the appropriate block style based on age
      * @returns {string} 'simple' or 'advanced'
      */
-    getBlockStyle() {
+    getBlockStyle () {
         return this.isYoungLearner() ? 'simple' : 'advanced';
     }
 
@@ -100,7 +100,7 @@ class AgeManager {
      * Add a listener for age changes
      * @param {Function} listener - Function to call when age changes
      */
-    addListener(listener) {
+    addListener (listener) {
         if (typeof listener === 'function') {
             this.listeners.push(listener);
         }
@@ -110,7 +110,7 @@ class AgeManager {
      * Remove a listener
      * @param {Function} listener - Function to remove
      */
-    removeListener(listener) {
+    removeListener (listener) {
         const index = this.listeners.indexOf(listener);
         if (index > -1) {
             this.listeners.splice(index, 1);
@@ -121,7 +121,7 @@ class AgeManager {
      * Notify all listeners of age change
      * @param {string} newAge - The new age group
      */
-    notifyListeners(newAge) {
+    notifyListeners (newAge) {
         this.listeners.forEach(listener => {
             try {
                 listener(newAge);
@@ -135,7 +135,7 @@ class AgeManager {
      * Get age from session storage
      * @returns {string|null} The stored age or null
      */
-    getStoredAge() {
+    getStoredAge () {
         try {
             return sessionStorage.getItem(AGE_STORAGE_KEY);
         } catch (error) {
@@ -148,7 +148,7 @@ class AgeManager {
      * Store age in session storage
      * @param {string} age - The age to store
      */
-    storeAge(age) {
+    storeAge (age) {
         try {
             sessionStorage.setItem(AGE_STORAGE_KEY, age);
         } catch (error) {
@@ -159,7 +159,7 @@ class AgeManager {
     /**
      * Clear stored age
      */
-    clearAge() {
+    clearAge () {
         try {
             sessionStorage.removeItem(AGE_STORAGE_KEY);
             this.currentAge = null;
@@ -171,7 +171,7 @@ class AgeManager {
     /**
      * Reset to default state
      */
-    reset() {
+    reset () {
         this.clearAge();
         this.listeners = [];
     }
@@ -181,4 +181,4 @@ class AgeManager {
 const ageManager = new AgeManager();
 
 export default ageManager;
-export { AGE_GROUPS };
+export {AGE_GROUPS};

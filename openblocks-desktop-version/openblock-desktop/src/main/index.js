@@ -30,9 +30,43 @@ app.allowRendererProcessReuse = true;
 // allow connect to localhost
 app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 
-// enable gpu and ignore gpu blacklist
-app.commandLine.hasSwitch('enable-gpu');
-app.commandLine.hasSwitch('ignore-gpu-blacklist');
+// GPU/WebGL configuration
+// On Linux, prefer SwiftShader software GL to avoid driver issues while keeping WebGL available
+const forceSwiftShader = (
+    process.env.ELECTRON_USE_SWIFTSHADER === '1' ||
+    process.env.ELECTRON_USE_SWIFTSHADER === 'true' ||
+    process.platform === 'linux'
+);
+const forceDisableGPU = (
+    process.env.ELECTRON_DISABLE_GPU === '1' ||
+    process.env.ELECTRON_DISABLE_GPU === 'true'
+);
+
+if (forceDisableGPU) {
+    // Only when explicitly requested; note this will disable WebGL
+    app.commandLine.appendSwitch('disable-gpu');
+} else if (forceSwiftShader) {
+    // Use software GL implementation so WebGL works without a functioning GPU/driver
+    app.commandLine.appendSwitch('use-gl', 'swiftshader');
+    app.commandLine.appendSwitch('ignore-gpu-blacklist');
+} else {
+    // Default: allow hardware GPU
+    app.commandLine.appendSwitch('enable-gpu');
+    app.commandLine.appendSwitch('ignore-gpu-blacklist');
+}
+
+// Additional switches to improve stability
+app.commandLine.appendSwitch('disable-features', 'VizDisplayCompositor');
+app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
+
+// Additional switches to fix specific issues
+app.commandLine.appendSwitch('disable-extensions');
+app.commandLine.appendSwitch('disable-plugins');
+app.commandLine.appendSwitch('disable-web-security');
+app.commandLine.appendSwitch('allow-running-insecure-content');
+app.commandLine.appendSwitch('disable-features', 'TranslateUI');
 
 telemetry.appWasOpened();
 
@@ -229,6 +263,25 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
     });
     const webContents = window.webContents;
 
+    // Add error handling for webContents
+    webContents.on('crashed', (event, killed) => {
+        log.error(`WebContents crashed. Killed: ${killed}`);
+        if (window === _windows.main) {
+            // If main window crashes, try to reload
+            setTimeout(() => {
+                try {
+                    window.reload();
+                } catch (error) {
+                    log.error(`Failed to reload main window: ${error.message}`);
+                }
+            }, 1000);
+        }
+    });
+
+    webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+        log.error(`Failed to load URL: ${validatedURL}, Error: ${errorDescription} (${errorCode})`);
+    });
+
     webContents.session.setPermissionRequestHandler(handlePermissionRequest);
 
     webContents.on('before-input-event', (event, input) => {
@@ -243,6 +296,20 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
             event.preventDefault();
             webContents.openDevTools({mode: 'detach', activate: true});
         }
+
+        // Add refresh shortcuts: Ctrl+R / F5 on Windows/Linux, Cmd+R on macOS
+        const isReloadCombo = (
+            input.type === 'keyDown' && !input.isAutoRepeat && !input.isComposing && (
+                input.code === 'F5' ||
+                (input.code === 'KeyR' && (process.platform === 'darwin' ? input.meta : input.control))
+            )
+        );
+        if (isReloadCombo) {
+            event.preventDefault();
+            try {
+                webContents.reload();
+            } catch (_) {}
+        }
     });
 
     webContents.on('new-window', (event, newWindowUrl) => {
@@ -251,9 +318,26 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
     });
 
     const fullUrl = makeFullUrl(url, search);
-    window.loadURL(fullUrl);
+    window.loadURL(fullUrl).catch(error => {
+        log.error(`Failed to load URL ${fullUrl}: ${error.message}`);
+    });
+    
     window.once('ready-to-show', () => {
         webContents.send('ready-to-show');
+    });
+
+    // One-time reload workaround: with SwiftShader on some Linux setups the first
+    // render can be blank. A quick reload after first load resolves it.
+    let reloadedOnceForSwiftShader = false;
+    webContents.on('did-finish-load', () => {
+        if (!reloadedOnceForSwiftShader && forceSwiftShader) {
+            reloadedOnceForSwiftShader = true;
+            setTimeout(() => {
+                if (!window.isDestroyed()) {
+                    try { webContents.reload(); } catch (_) {}
+                }
+            }, 100);
+        }
     });
 
     return window;
@@ -489,12 +573,31 @@ app.on('window-all-closed', () => {
 });
 
 app.on('will-quit', () => {
-    telemetry.appWillClose();
+    try {
+        telemetry.appWillClose();
+    } catch (error) {
+        log.error(`Error during app quit: ${error.message}`);
+    }
+    
+    // Clean up resources
+    try {
+        if (desktopLink) {
+            desktopLink.stop();
+        }
+    } catch (error) {
+        log.error(`Error stopping desktop link: ${error.message}`);
+    }
 });
 
 app.on('activate', () => {
-    if (_windows.main === null) {
-        createMainWindow();
+    try {
+        if (_windows.main === null || _windows.main.isDestroyed()) {
+            _windows.main = createMainWindow();
+        } else {
+            _windows.main.show();
+        }
+    } catch (error) {
+        log.error(`Error handling activate event: ${error.message}`);
     }
 });
 
@@ -510,6 +613,29 @@ if (process.platform === 'win32') {
     }
 }
 
+// Handle GPU process crashes and other errors gracefully
+app.on('gpu-process-crashed', (event, killed) => {
+    log.error(`GPU process crashed. Killed: ${killed}`);
+});
+
+app.on('render-process-gone', (event, webContents, details) => {
+    log.error(`Render process gone. Reason: ${details.reason}, Exit code: ${details.exitCode}`);
+});
+
+app.on('child-process-gone', (event, details) => {
+    log.error(`Child process gone. Type: ${details.type}, Reason: ${details.reason}, Exit code: ${details.exitCode}`);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    log.error(`Uncaught Exception: ${error.message}`);
+    log.error(error.stack);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    log.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
+});
+
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
     if (isDevelopment) {
@@ -524,76 +650,155 @@ app.on('ready', () => {
                 // return a promise that never resolves, especially if the extension is already installed.
                 installExtension(extension).then(
                     extensionName => log(`Installed dev extension: ${extensionName}`),
-                    errorMessage => log.error(`Error installing dev extension: ${errorMessage}`)
-                );
+                    errorMessage => {
+                        // Better error handling for extension installation failures
+                        if (errorMessage && errorMessage.message) {
+                            log.error(`Error installing dev extension: ${errorMessage.message}`);
+                        } else {
+                            log.error(`Error installing dev extension: ${errorMessage}`);
+                        }
+                    }
+                ).catch(error => {
+                    log.error(`Failed to install dev extension: ${error.message || error}`);
+                });
             }
+        }).catch(error => {
+            log.error(`Failed to import electron-devtools-installer: ${error.message || error}`);
         });
     }
 
     ipcMain.on('clearCache', () => {
-        desktopLink.clearCache();
+        try {
+            desktopLink.clearCache();
+        } catch (error) {
+            log.error(`Error clearing cache: ${error.message}`);
+        }
     });
 
     ipcMain.on('installDriver', () => {
-        desktopLink.installDriver(() => {
-            dialog.showMessageBox(_windows.main, {
-                type: 'info',
-                message: `${formatMessage({
-                    id: 'index.systemRestartRequired',
-                    default: 'Installation is complete, please restart the system.',
-                    description: 'prompt for restart system'
-                })}`
+        try {
+            desktopLink.installDriver(() => {
+                try {
+                    if (_windows.main && !_windows.main.isDestroyed()) {
+                        dialog.showMessageBox(_windows.main, {
+                            type: 'info',
+                            message: `${formatMessage({
+                                id: 'index.systemRestartRequired',
+                                default: 'Installation is complete, please restart the system.',
+                                description: 'prompt for restart system'
+                            })}`
+                        });
+                    }
+                } catch (dialogError) {
+                    log.error(`Error showing driver installation dialog: ${dialogError.message}`);
+                }
             });
-        });
+        } catch (error) {
+            log.error(`Error installing driver: ${error.message}`);
+        }
     });
 
-    // create a loading windows let user know the app is starting
-    _windows.loading = createLoadingWindow();
-    _windows.loading.once('show', () => {
-        desktopLink.start();
+        // create a loading windows let user know the app is starting
+    try {
+        _windows.loading = createLoadingWindow();
+        _windows.loading.once('show', () => {
+            try {
+                desktopLink.start();
+            } catch (error) {
+                log.error(`Failed to start desktop link: ${error.message}`);
+                // Continue anyway as this is not critical for the main app
+            }
 
-        _windows.main = createMainWindow();
-        _windows.main.on('closed', () => {
-            delete _windows.main;
-        });
+            try {
+                _windows.main = createMainWindow();
+                _windows.main.on('closed', () => {
+                    delete _windows.main;
+                });
 
-        _windows.about = createAboutWindow();
-        _windows.about.on('close', event => {
-            event.preventDefault();
-            _windows.about.hide();
-        });
-        _windows.license = createLicenseWindow();
-        _windows.license.on('close', event => {
-            event.preventDefault();
-            _windows.license.hide();
-        });
-        _windows.privacy = createPrivacyWindow();
-        _windows.privacy.on('close', event => {
-            event.preventDefault();
-            _windows.privacy.hide();
-        });
+                _windows.about = createAboutWindow();
+                _windows.about.on('close', event => {
+                    event.preventDefault();
+                    _windows.about.hide();
+                });
+                _windows.license = createLicenseWindow();
+                _windows.license.on('close', event => {
+                    event.preventDefault();
+                    _windows.license.hide();
+                });
+                _windows.privacy = createPrivacyWindow();
+                _windows.privacy.on('close', event => {
+                    event.preventDefault();
+                    _windows.privacy.hide();
+                });
 
-        // after finsh load progress show main window and close loading window
-        _windows.main.show();
-        _windows.loading.close();
-        delete _windows.loading;
-    });
+                // after finsh load progress show main window and close loading window
+                _windows.main.show();
+                _windows.loading.close();
+                delete _windows.loading;
+            } catch (error) {
+                log.error(`Error during main window creation: ${error.message}`);
+                // Try to show main window even if other windows fail
+                if (_windows.main) {
+                    _windows.main.show();
+                }
+                if (_windows.loading) {
+                    _windows.loading.close();
+                    delete _windows.loading;
+                }
+            }
+        });
+    } catch (error) {
+        log.error(`Error creating loading window: ${error.message}`);
+        // Fallback: create main window directly
+        try {
+            _windows.main = createMainWindow();
+            _windows.main.on('closed', () => {
+                delete _windows.main;
+            });
+            _windows.main.show();
+        } catch (mainError) {
+            log.error(`Failed to create main window: ${mainError.message}`);
+            app.quit();
+        }
+    }
 });
 
 ipcMain.on('open-about-window', () => {
-    _windows.about.show();
+    try {
+        if (_windows.about && !_windows.about.isDestroyed()) {
+            _windows.about.show();
+        }
+    } catch (error) {
+        log.error(`Error opening about window: ${error.message}`);
+    }
 });
 
 ipcMain.on('open-license-window', () => {
-    _windows.license.show();
+    try {
+        if (_windows.license && !_windows.license.isDestroyed()) {
+            _windows.license.show();
+        }
+    } catch (error) {
+        log.error(`Error opening license window: ${error.message}`);
+    }
 });
 
 ipcMain.on('open-privacy-policy-window', () => {
-    _windows.privacy.show();
+    try {
+        if (_windows.privacy && !_windows.privacy.isDestroyed()) {
+            _windows.privacy.show();
+        }
+    } catch (error) {
+        log.error(`Error opening privacy policy window: ${error.message}`);
+    }
 });
 
 ipcMain.on('set-locale', (event, arg) => {
-    formatMessage.setup({locale: arg});
+    try {
+        formatMessage.setup({locale: arg});
+    } catch (error) {
+        log.error(`Error setting locale: ${error.message}`);
+    }
 });
 
 
@@ -611,18 +816,33 @@ const initialProjectDataPromise = (async () => {
         const projectData = await promisify(fs.readFile)(projectPath, null);
         return projectData;
     } catch (e) {
-        dialog.showMessageBox(_windows.main, {
-            type: 'error',
-            title: 'Failed to load project',
-            message: `${formatMessage({
-                id: 'index.failedLoadProject',
-                default: 'Could not load project from file:',
-                description: 'prompt for failed to load project'
-            })}\n${projectPath}`,
-            detail: e.message
-        });
+        log.error(`Failed to load project from ${projectPath}: ${e.message}`);
+        // Only show dialog if main window exists
+        if (_windows.main && !_windows.main.isDestroyed()) {
+            try {
+                dialog.showMessageBox(_windows.main, {
+                    type: 'error',
+                    title: 'Failed to load project',
+                    message: `${formatMessage({
+                        id: 'index.failedLoadProject',
+                        default: 'Could not load project from file:',
+                        description: 'prompt for failed to load project'
+                    })}\n${projectPath}`,
+                    detail: e.message
+                });
+            } catch (dialogError) {
+                log.error(`Failed to show error dialog: ${dialogError.message}`);
+            }
+        }
     }
     // load failed: initial project data undefined
 })(); // IIFE
 
-ipcMain.handle('get-initial-project-data', () => initialProjectDataPromise);
+ipcMain.handle('get-initial-project-data', async () => {
+    try {
+        return await initialProjectDataPromise;
+    } catch (error) {
+        log.error(`Error getting initial project data: ${error.message}`);
+        return null;
+    }
+});

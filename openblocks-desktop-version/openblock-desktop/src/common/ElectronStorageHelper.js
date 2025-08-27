@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 const staticAssets = path.resolve(__static, 'assets');
 
@@ -27,7 +28,33 @@ class ElectronStorageHelper {
                 path.resolve(staticAssets, `${assetId}.${dataFormat}`),
                 (err, data) => {
                     if (err) {
-                        reject(err);
+                        // Fallback: fetch from Scratch asset CDN when not bundled locally
+                        const tryUrls = [
+                            `https://assets.scratch.mit.edu/internalapi/asset/${assetId}.${dataFormat}/get/`,
+                            `https://assets.scratch.mit.edu/${assetId}.${dataFormat}`
+                        ];
+                        const fetchUrl = (idx = 0) => {
+                            if (idx >= tryUrls.length) return reject(err);
+                            const url = tryUrls[idx];
+                            const req = https.get(url, res => {
+                                if (res.statusCode !== 200) {
+                                    res.resume();
+                                    return fetchUrl(idx + 1);
+                                }
+                                const chunks = [];
+                                res.on('data', c => chunks.push(c));
+                                res.on('end', () => {
+                                    try {
+                                        const buf = Buffer.concat(chunks);
+                                        resolve(new this.parent.Asset(assetType, assetId, dataFormat, buf));
+                                    } catch (e) {
+                                        reject(e);
+                                    }
+                                });
+                            });
+                            req.on('error', () => fetchUrl(idx + 1));
+                        };
+                        return fetchUrl(0);
                     } else {
                         resolve(new this.parent.Asset(assetType, assetId, dataFormat, data));
                     }

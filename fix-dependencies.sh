@@ -44,7 +44,7 @@ cd ..
 
 # Install dependencies for desktop app
 echo "Installing desktop app dependencies..."
-cd openblocks-desktop-version/openblock-desktop
+cd new-desktop
 npm install
 cd ../..
 
@@ -73,7 +73,7 @@ npm link
 echo "✅ Linked openblock-resource"
 
 # Link all packages in the desktop app
-cd ../openblocks-desktop-version/openblock-desktop
+cd ../new-desktop
 npm link openblock-gui openblock-vm openblock-blocks openblock-link openblock-resource
 echo "✅ Linked all packages in desktop app"
 
@@ -107,7 +107,7 @@ echo "🎯 Dependencies Fixed!"
 echo "======================"
 echo ""
 echo "Next steps:"
-echo "1. Navigate to openblocks-desktop-version/openblock-desktop"
+echo "1. Navigate to new-desktop"
 echo "2. Run 'npm start' to start development mode"
 echo ""
 echo "The application should now start without crashing!"

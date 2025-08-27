@@ -22,8 +22,8 @@ console.log(`Targeting Electron ${electronVersion}`); // eslint-disable-line no-
 
 const makeConfig = function (defaultConfig, options) {
     const babelOptions = {
-        // Explicitly disable babelrc so we don't catch various config in much lower dependencies.
-        babelrc: false,
+        // Enable babelrc to use our custom configuration
+        babelrc: true,
         plugins: [
             '@babel/plugin-syntax-dynamic-import',
             '@babel/plugin-transform-async-to-generator',
@@ -34,7 +34,7 @@ const makeConfig = function (defaultConfig, options) {
         ]
     };
 
-    const sourceFileTest = options.useReact ? /\.jsx?$/ : /\.js$/;
+    const sourceFileTest = options.useReact ? /\.(js|jsx)$/ : /\.js$/;
     if (options.useReact) {
         babelOptions.presets = babelOptions.presets.concat('@babel/preset-react');
         babelOptions.plugins.push(['react-intl', {
@@ -103,7 +103,9 @@ const makeConfig = function (defaultConfig, options) {
                     test: /\.(svg|png|wav|gif|jpg|ttf)$/,
                     loader: 'file-loader',
                     options: {
-                        outputPath: 'static/assets/'
+                        outputPath: 'static/assets/',
+                        // Ensure CommonJS export so `require()` returns the URL string
+                        esModule: false
                     }
                 },
                 {
@@ -126,10 +128,10 @@ const makeConfig = function (defaultConfig, options) {
             new webpack.SourceMapDevToolPlugin({
                 filename: '[file].map'
             }),
-            new MonacoWebpackPlugin({
-                languages: ['c', 'cpp', 'python', 'lua', 'javascript'],
-                features: ['!gotoSymbol']
-            })
+            // Temporarily disabled Monaco Editor to fix module resolution issues
+            // new MonacoWebpackPlugin({
+            //     languages: ['c', 'cpp', 'python', 'lua', 'javascript']
+            // })
         ].concat(options.plugins || []),
         resolve: {
             cacheWithContext: false,
@@ -137,7 +139,10 @@ const makeConfig = function (defaultConfig, options) {
             alias: {
                 // act like scratch-gui has this line in its package.json:
                 //   "browser": "./src/index.js"
-                'openblock-gui$': path.resolve(__dirname, 'node_modules', 'openblock-gui', 'src', 'index.js')
+                'openblock-gui$': path.resolve(__dirname, 'node_modules', 'openblock-gui', 'src', 'index.js'),
+                // Force a single React/ReactDOM instance across all linked packages to avoid hooks mismatch
+                'react': path.resolve(__dirname, 'node_modules', 'react'),
+                'react-dom': path.resolve(__dirname, 'node_modules', 'react-dom')
             }
         }
     });

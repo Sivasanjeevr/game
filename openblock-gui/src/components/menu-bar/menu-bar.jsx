@@ -468,18 +468,18 @@ class MenuBar extends React.Component {
     }
 
     handleChangeAge () {
-        this.setState({ showAgePopup: true });
+        this.setState({showAgePopup: true});
     }
 
     handleAgeSelect (selectedAge) {
         ageManager.setAge(selectedAge);
-        this.setState({ showAgePopup: false });
+        this.setState({showAgePopup: false});
         // Force a page reload to apply the new layout
         window.location.reload();
     }
 
     handleCloseAgePopup () {
-        this.setState({ showAgePopup: false });
+        this.setState({showAgePopup: false});
     }
     buildAboutMenu (onClickAbout) {
         if (!onClickAbout) {
@@ -685,60 +685,62 @@ class MenuBar extends React.Component {
                             </MenuBarMenu>
                         </div>
                     )}
-                    <div
-                        className={classNames(styles.menuBarItem,
-                            this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
-                            {[styles.active]: this.props.editMenuOpen
-                            })}
-                        onMouseUp={this.props.isRealtimeMode ? this.props.onClickEdit : null}
-                    >
-                        <div className={classNames(styles.editMenu)} >
-                            {this.state.isOverflow ? (
-                                <img
-                                    className={styles.editIcon}
-                                    src={editIcon}
-                                />) :
-                                <FormattedMessage
-                                    defaultMessage="Edit"
-                                    description="Text for edit dropdown menu"
-                                    id="gui.menuBar.edit"
-                                />}
-                        </div>
-                        <MenuBarMenu
-                            className={classNames(styles.menuBarMenu)}
-                            open={this.props.editMenuOpen}
-                            place={this.props.isRtl ? 'left' : 'right'}
-                            onRequestClose={this.props.onRequestCloseEdit}
+                    {this.props.canShowEdit && (
+                        <div
+                            className={classNames(styles.menuBarItem,
+                                this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
+                                {[styles.active]: this.props.editMenuOpen
+                                })}
+                            onMouseUp={this.props.isRealtimeMode ? this.props.onClickEdit : null}
                         >
-                            <DeletionRestorer>{(handleRestore, {restorable, deletedItem}) => (
-                                <MenuItem
-                                    className={classNames({[styles.disabled]: !restorable})}
-                                    onClick={this.handleRestoreOption(handleRestore)}
-                                >
-                                    {this.restoreOptionMessage(deletedItem)}
-                                </MenuItem>
-                            )}</DeletionRestorer>
-                            <MenuSection>
-                                <TurboMode>{(toggleTurboMode, {turboMode}) => (
-                                    <MenuItem onClick={toggleTurboMode}>
-                                        {turboMode ? (
-                                            <FormattedMessage
-                                                defaultMessage="Turn off Turbo Mode"
-                                                description="Menu bar item for turning off turbo mode"
-                                                id="gui.menuBar.turboModeOff"
-                                            />
-                                        ) : (
-                                            <FormattedMessage
-                                                defaultMessage="Turn on Turbo Mode"
-                                                description="Menu bar item for turning on turbo mode"
-                                                id="gui.menuBar.turboModeOn"
-                                            />
-                                        )}
+                            <div className={classNames(styles.editMenu)} >
+                                {this.state.isOverflow ? (
+                                    <img
+                                        className={styles.editIcon}
+                                        src={editIcon}
+                                    />) :
+                                    <FormattedMessage
+                                        defaultMessage="Edit"
+                                        description="Text for edit dropdown menu"
+                                        id="gui.menuBar.edit"
+                                    />}
+                            </div>
+                            <MenuBarMenu
+                                className={classNames(styles.menuBarMenu)}
+                                open={this.props.editMenuOpen}
+                                place={this.props.isRtl ? 'left' : 'right'}
+                                onRequestClose={this.props.onRequestCloseEdit}
+                            >
+                                <DeletionRestorer>{(handleRestore, {restorable, deletedItem}) => (
+                                    <MenuItem
+                                        className={classNames({[styles.disabled]: !restorable})}
+                                        onClick={this.handleRestoreOption(handleRestore)}
+                                    >
+                                        {this.restoreOptionMessage(deletedItem)}
                                     </MenuItem>
-                                )}</TurboMode>
-                            </MenuSection>
-                        </MenuBarMenu>
-                    </div>
+                                )}</DeletionRestorer>
+                                <MenuSection>
+                                    <TurboMode>{(toggleTurboMode, {turboMode}) => (
+                                        <MenuItem onClick={toggleTurboMode}>
+                                            {turboMode ? (
+                                                <FormattedMessage
+                                                    defaultMessage="Turn off Turbo Mode"
+                                                    description="Menu bar item for turning off turbo mode"
+                                                    id="gui.menuBar.turboModeOff"
+                                                />
+                                            ) : (
+                                                <FormattedMessage
+                                                    defaultMessage="Turn on Turbo Mode"
+                                                    description="Menu bar item for turning on turbo mode"
+                                                    id="gui.menuBar.turboModeOn"
+                                                />
+                                            )}
+                                        </MenuItem>
+                                    )}</TurboMode>
+                                </MenuSection>
+                            </MenuBarMenu>
+                        </div>
+                    )}
                     {/* <Divider className={classNames(styles.divider)} /> */}
                     {/* <div
                         className={classNames(styles.menuBarItem, styles.hoverable)}
@@ -858,17 +860,17 @@ class MenuBar extends React.Component {
                     </div> */}
 
                     <ComingSoonTooltip>
-                    <div
-                        aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
-                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        <div
+                            aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
+                            className={classNames(styles.menuBarItem, styles.hoverable)}
                         // onClick={this.props.onOpenTipLibrary}
-                    >
-                        <img
-                            className={styles.helpIcon}
-                            src={helpIcon}
-                        />
-                        {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.tutorials} />}
-                    </div>
+                        >
+                            <img
+                                className={styles.helpIcon}
+                                src={helpIcon}
+                            />
+                            {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.tutorials} />}
+                        </div>
                     </ComingSoonTooltip>
                     <Divider className={classNames(styles.divider)} />
                     <div
@@ -907,7 +909,7 @@ class MenuBar extends React.Component {
                         onClick={this.handleChangeAge}
                         title={`Current: ${ageManager.getCurrentAge() || 'Not set'} - Click to change`}
                     >
-                        Age group: 
+                        Age group:
                         <span style={{fontSize: '0.9rem', fontWeight: 'bold'}}>
                             {ageManager.getCurrentAge() || 'Age?'}
                         </span>
@@ -916,12 +918,12 @@ class MenuBar extends React.Component {
                         </span>
                     </div>
                     {this.state.showAgePopup && (
-                        <AgeSelectionPopup 
-                            onAgeSelect={this.handleAgeSelect} 
+                        <AgeSelectionPopup
+                            onAgeSelect={this.handleAgeSelect}
                             onClose={this.handleCloseAgePopup}
                         />
                     )}
-                    <Divider className={classNames(styles.divider)} /> 
+                    <Divider className={classNames(styles.divider)} />
                     {/* <div className={classNames(styles.menuBarItem, styles.programModeGroup)}>
                         <FormattedMessage
                             defaultMessage="Program Mode"
@@ -1014,6 +1016,7 @@ MenuBar.propTypes = {
     confirmReadyToReplaceProject: PropTypes.func,
     confirmClearCache: PropTypes.func,
     editMenuOpen: PropTypes.bool,
+    canShowEdit: PropTypes.bool,
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     settingMenuOpen: PropTypes.bool,
@@ -1100,7 +1103,8 @@ MenuBar.propTypes = {
 MenuBar.defaultProps = {
     logo: openblockLogo,
     logoSmall: openblockLogoSmall,
-    onShare: () => {}
+    onShare: () => {},
+    canShowEdit: true
 };
 
 const mapStateToProps = (state, ownProps) => {

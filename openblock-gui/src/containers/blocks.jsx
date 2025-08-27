@@ -115,7 +115,7 @@ class Blocks extends React.Component {
         const isYoungLearner = ageManager.isYoungLearner();
         
         let baseConfig = {
-            rtl: this.props.isRtl, 
+            rtl: this.props.isRtl,
             toolbox: this.props.toolboxXML
         };
 
@@ -128,15 +128,15 @@ class Blocks extends React.Component {
                 // Use 'end' to place the toolbox/flyout at the bottom.
                 toolboxPosition: 'end',
                 zoom: {
-                    controls: false,  // Hide zoom for young learners
+                    controls: false, // Hide zoom for young learners
                     wheel: true,
                     startScale: BLOCKS_DEFAULT_SCALE
                 },
-                trashcan: false,  // Hide trash can
-                sounds: false,    // Simplify UI
+                trashcan: false, // Hide trash can
+                sounds: false, // Simplify UI
                 media: this.props.options.media,
                 // Enhanced styling for young learners
-                renderer: 'geras',  // Use modern Geras renderer if available
+                renderer: 'geras', // Use modern Geras renderer if available
                 theme: {
                     blockStyles: {
                         motion_blocks: {

@@ -70,7 +70,9 @@ const vmManagerHOC = function (WrappedComponent) {
                         // the renderer can be async. Draw only if renderer exists.
                         setTimeout(() => {
                             if (this.props.vm && this.props.vm.renderer) {
-                                try { this.props.vm.renderer.draw(); } catch (e) { /* noop */ }
+                                try {
+                                    this.props.vm.renderer.draw();
+                                } catch (e) { /* noop */ }
                             }
                         });
                     }
