@@ -19,8 +19,13 @@ const getModulePath = moduleName => {
     }
 };
 
-module.exports = defaultConfig =>
-    makeConfig(
+module.exports = defaultConfig => {
+    // Ensure 'openblock-vm' is bundled into the renderer instead of treated as an external
+    // electron-webpack sometimes provides externals as an array/function.
+    // Disable externals so imports from linked packages (like openblock-vm) are bundled.
+    defaultConfig.externals = [];
+
+    return makeConfig(
         defaultConfig,
         {
             name: 'renderer',
@@ -38,9 +43,10 @@ module.exports = defaultConfig =>
                     from: path.join(getModulePath('openblock-blocks'), 'media'),
                     to: 'static/blocks-media'
                 }]),
+                // Copy the VM extension worker. Use source path when dist is not present.
                 new CopyWebpackPlugin([{
-                    from: 'extension-worker.{js,js.map}',
-                    context: path.join(getModulePath('openblock-vm'), 'dist', 'web')
+                    from: 'extension-worker.js',
+                    context: path.join(getModulePath('openblock-vm'), 'src', 'extension-support')
                 }]),
                 new CopyWebpackPlugin([{
                     from: path.join(getModulePath('openblock-gui'), 'src', 'lib', 'libraries', '*.json'),
@@ -50,3 +56,4 @@ module.exports = defaultConfig =>
             ]
         }
     );
+};

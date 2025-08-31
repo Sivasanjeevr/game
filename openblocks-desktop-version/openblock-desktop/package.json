@@ -10,8 +10,8 @@
     "clean": "rimraf ./dist ./static ./external-resources ./tools ./translations ./firmwares ./drivers",
     "i18n:src": "mkdirp translations/core && format-message extract --out-file translations/core/en.json src/main/**.js",
     "i18n:push": "tx-push-src openblock-editor desktop translations/core/en.json",
-    "start": "mkdirp ./dist && electron-webpack dev --bail --display-error-details --env.minify=false --no-progress",
-    "compile": "mkdirp ./dist && electron-webpack --bail --display-error-details --env.minify=false --no-progress",
+    "start": "mkdirp ./dist && node --openssl-legacy-provider ./node_modules/electron-webpack/out/cli.js dev --bail --display-error-details --env.minify=false --no-progress",
+    "compile": "mkdirp ./dist && node --openssl-legacy-provider ./node_modules/electron-webpack/out/cli.js --bail --display-error-details --env.minify=false --no-progress",
     "fetch:drivers": "rimraf ./drivers && node scripts/download-driver.js",
     "fetch:exts": "rimraf ./external-resources && node ./node_modules/openblock-resource/script/download.js  --repo=openblockcc/external-resources-v3",
     "fetch:firmwares": "rimraf ./firmwares && node ./node_modules/openblock-link/script/download-firmwares.js",
@@ -36,12 +36,13 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "openblock-gui": "file:../../openblock-gui",
-    "openblock-vm": "file:../../openblock-vm",
     "openblock-blocks": "file:../../openblock-blocks",
+    "openblock-gui": "file:../../openblock-gui",
     "openblock-link": "file:../../openblock-link",
     "openblock-resource": "file:../../openblock-resource",
-    "source-map-support": "^0.5.19"
+    "openblock-vm": "file:../../openblock-vm",
+    "source-map-support": "^0.5.19",
+    "ws": "^7.5.10"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.53.1",
