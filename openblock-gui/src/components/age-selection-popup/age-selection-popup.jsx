@@ -34,7 +34,7 @@ const AgeSelectionPopup = ({
                         ×
                     </button>
                     <h2 className={styles.popupTitle}>
-                        Welcome to OpenBlocks! 🎉
+                        Welcome to My game! 🎉
                     </h2>
                     <p className={styles.popupSubtitle}>
                         Choose your experience level to get started

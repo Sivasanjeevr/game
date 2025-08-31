@@ -13,7 +13,7 @@ const messages = defineMessages({
     defaultProjectTitle: {
         id: 'gui.gui.defaultProjectTitle',
         description: 'Default title for project',
-        defaultMessage: 'OpenBlock Project'
+        defaultMessage: 'My Project'
     }
 });
 
@@ -45,8 +45,9 @@ const TitledHOC = function (WrappedComponent) {
         }
         handleReceivedProjectTitle (requestedTitle) {
             let newTitle = requestedTitle;
-            if (newTitle === null || typeof newTitle === 'undefined') {
-                newTitle = this.props.intl.formatMessage(messages.defaultProjectTitle);
+            // Force our custom default regardless of localization
+            if (newTitle === null || typeof newTitle === 'undefined' || newTitle === 'OpenBlock Project') {
+                newTitle = 'My Project';
             }
             this.props.onChangedProjectTitle(newTitle);
             return newTitle;

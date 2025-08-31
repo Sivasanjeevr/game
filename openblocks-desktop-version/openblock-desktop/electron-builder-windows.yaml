@@ -4,10 +4,10 @@ directories:
 extraFiles: ['LICENSE', 'LICENSE.ScratchFoundation', 'TRADEMARK', "tools", "external-resources", 'firmwares', "drivers"]
 
 appId: openblock.cc.openblock-desktop
-productName: "OpenBlockDesktop"
+productName: "MyDesktopApp"
 publish:
   - provider: github
-artifactName: "OpenBlock-Desktop_v${version}_${os}_${arch}.${ext}"
+artifactName: "MyDesktopApp_v${version}_${os}_${arch}.${ext}"
 
 fileAssociations:
   ext: ob

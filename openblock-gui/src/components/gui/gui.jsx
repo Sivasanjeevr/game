@@ -39,7 +39,7 @@ import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import UploadProgress from '../../containers/upload-progress.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
-import UpdateModal from '../../containers/update-modal.jsx';
+// Removed UpdateModal to disable update popup in desktop
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -262,14 +262,7 @@ return ageGroup && (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize =
                         onRequestClose={onRequestCloseBackdropLibrary}
                     />
                 ) : null}
-                {updateModalVisible ? (
-                    <UpdateModal
-                        vm={vm}
-                        onAbortUpdate={onAbortUpdate}
-                        onClickUpdate={onClickUpdate}
-                        onShowMessageBox={onShowMessageBox}
-                    />
-                ) : null}
+                {/* Update modal disabled in desktop build */}
                 {/* Only show main interface when not loading */}
                 {!loading && !isCreating ? (
                     <>

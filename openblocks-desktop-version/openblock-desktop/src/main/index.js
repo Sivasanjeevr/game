@@ -228,6 +228,12 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
         },
         ...browserWindowOptions
     });
+    // Force a fixed app title and prevent renderer from overwriting it
+    try {
+        window.setTitle('MyDesktopApp');
+        window.on('page-title-updated', e => e.preventDefault());
+    } catch (_) {}
+
     const webContents = window.webContents;
 
     webContents.session.setPermissionRequestHandler(handlePermissionRequest);
