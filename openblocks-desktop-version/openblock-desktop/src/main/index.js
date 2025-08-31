@@ -243,6 +243,29 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
             event.preventDefault();
             webContents.openDevTools({mode: 'detach', activate: true});
         }
+
+        // Add Refresh shortcuts: F5 and Ctrl/Cmd+R
+        const isReloadKey = (
+            input.type === 'keyDown' &&
+            !input.isAutoRepeat &&
+            !input.isComposing &&
+            (
+                input.code === 'F5' ||
+                (process.platform === 'darwin' ? (input.meta && input.code === 'KeyR') : (input.control && input.code === 'KeyR'))
+            )
+        );
+        if (isReloadKey) {
+            event.preventDefault();
+            try {
+                if (_windows.main && !_windows.main.isDestroyed()) {
+                    _windows.main.reload();
+                } else {
+                    webContents.reload();
+                }
+            } catch (e) {
+                // fall back silently
+            }
+        }
     });
 
     webContents.on('new-window', (event, newWindowUrl) => {
@@ -479,7 +502,7 @@ if (process.platform === 'darwin') {
     const osxMenu = Menu.buildFromTemplate(MacOSMenu(app));
     Menu.setApplicationMenu(osxMenu);
 } else {
-    // disable menu for other platforms
+    // hide menu on Windows/Linux; use keyboard shortcuts (F5/Ctrl+R) for refresh
     Menu.setApplicationMenu(null);
 }
 

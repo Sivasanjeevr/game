@@ -43,6 +43,11 @@ module.exports = defaultConfig => {
                     from: path.join(getModulePath('openblock-blocks'), 'media'),
                     to: 'static/blocks-media'
                 }]),
+                // Copy GUI static assets (icons/images) so tab icons & others load
+                new CopyWebpackPlugin([{
+                    from: path.join(getModulePath('openblock-gui'), 'static'),
+                    to: 'static'
+                }]),
                 // Copy the VM extension worker. Use source path when dist is not present.
                 new CopyWebpackPlugin([{
                     from: 'extension-worker.js',
