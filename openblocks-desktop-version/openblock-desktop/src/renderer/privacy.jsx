@@ -89,11 +89,7 @@ const PrivacyElement = () => (
         </ul>
         <h2>Children and Student Privacy</h2>
         <p>
-            The OpenBlock Team is a nonprofit organization. As such, the Children&apos;s Online Privacy
-            Protection Act (COPPA) does not apply to OpenBlock. Nevertheless, OpenBlock takes children&apos;s privacy
-            seriously. OpenBlock collects only minimal information from its users, and only uses and discloses
-            information to provide the services and for limited other purposes, such as research, as described in this
-            Privacy Policy.
+            Enjoy your game!!
         </p>
         <p>
             OpenBlock does not collect information from a student&apos;s education record, as defined by the Family
@@ -195,13 +191,7 @@ const PrivacyElement = () => (
         </p>
         <h2>Contact Us</h2>
         <p>
-            The OpenBlock Team is the entity responsible for the processing of your Information. If you have any
-            questions about this Privacy Policy, or if you would like to exercise your rights to your Information, you
-            may contact us at <a
-                href="mailto:help@openblock.cc"
-                target="_blank"
-                rel="noopener noreferrer"
-            >help@openblock.cc</a> or via mail at:
+            Enjoy your game!!
         </p>
         <div className="vcard">
             <div className="org">OpenBlock Team</div>

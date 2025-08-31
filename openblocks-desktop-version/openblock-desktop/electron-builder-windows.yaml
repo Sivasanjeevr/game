@@ -28,7 +28,4 @@ nsis:
   include: buildResources/installer.nsh
   buildUniversalInstaller: false
 
-# Force Windows builds only
-platforms:
-  - win32
 

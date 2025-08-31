@@ -15,9 +15,7 @@ const messages = defineMessages({
         description: 'OpenBlock telemetry modal label - for accessibility'
     },
     bodyText1: {
-        defaultMessage: 'The OpenBlock Team is always looking to better understand how OpenBlock is used around the ' +
-            'world. To help support this effort, you can allow OpenBlock to automatically send usage information to ' +
-            'the OpenBlock Team.',
+        defaultMessage: 'Enjoy your game!!',
         description: 'First paragraph of body text for telemetry opt-in modal',
         id: 'gui.telemetryOptIn.body1'
     },

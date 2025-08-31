@@ -6,8 +6,8 @@ body,
     height: 100%;
     margin: 0;
 
-    /* Setting min height/width makes the UI scroll below those sizes */
-    min-width: 1024px;
-    min-height: 600px; /* Slightly smaller to avoid clipping on 768p + app frame */
-    overflow: hidden; /* prevent double scrollbars causing content cutoff */
+    /* Remove min-height constraint for better responsiveness on small screens */
+    min-width: 800px;
+    /* Allow vertical scrolling when content is taller than the window */
+    overflow: auto;
 }

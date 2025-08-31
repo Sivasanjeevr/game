@@ -1,4 +1,4 @@
-import {BrowserWindow, Menu, app, dialog, ipcMain, shell, systemPreferences} from 'electron';
+import {BrowserWindow, Menu, app, dialog, ipcMain, shell, systemPreferences, screen} from 'electron';
 import * as remote from '@electron/remote/main';
 import fs from 'fs-extra';
 import path from 'path';
@@ -221,6 +221,7 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
     const window = new BrowserWindow({
         useContentSize: true,
         show: false,
+        autoHideMenuBar: true,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true
@@ -230,6 +231,22 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
     const webContents = window.webContents;
 
     webContents.session.setPermissionRequestHandler(handlePermissionRequest);
+
+    // Restore persisted zoom or auto-fit small displays
+    try {
+        const savedZoom = storage.get('uiZoom');
+        if (savedZoom && typeof savedZoom === 'number') {
+            webContents.setZoomFactor(savedZoom);
+        } else {
+            const {height: workH} = screen.getPrimaryDisplay().workAreaSize || {};
+            if (workH && workH < 900) {
+                // Scale down more aggressively for typical laptop screens (768p, 900p)
+                const factor = Math.max(0.70, (workH - 80) / 900);
+                webContents.setZoomFactor(factor);
+                storage.set('uiZoom', factor);
+            }
+        }
+    } catch (_) {}
 
     webContents.on('before-input-event', (event, input) => {
         if (input.code === devToolKey.code &&
@@ -265,6 +282,24 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
             } catch (e) {
                 // fall back silently
             }
+        }
+
+        // Zoom controls: Ctrl/Cmd +, -, 0
+        const isZoomOut = input.type === 'keyDown' && !input.isAutoRepeat && !input.isComposing &&
+            ((process.platform === 'darwin' ? input.meta : input.control) && input.code === 'Minus');
+        const isZoomIn = input.type === 'keyDown' && !input.isAutoRepeat && !input.isComposing &&
+            ((process.platform === 'darwin' ? input.meta : input.control) && (input.code === 'Equal' || input.code === 'NumpadAdd'));
+        const isZoomReset = input.type === 'keyDown' && !input.isAutoRepeat && !input.isComposing &&
+            ((process.platform === 'darwin' ? input.meta : input.control) && input.code === 'Digit0');
+        if (isZoomOut || isZoomIn || isZoomReset) {
+            event.preventDefault();
+            const current = webContents.getZoomFactor();
+            let next = current;
+            if (isZoomReset) next = 1;
+            else if (isZoomIn) next = Math.min(1.5, Math.round((current + 0.05) * 20) / 20);
+            else if (isZoomOut) next = Math.max(0.7, Math.round((current - 0.05) * 20) / 20);
+            webContents.setZoomFactor(next);
+            storage.set('uiZoom', next);
         }
     });
 

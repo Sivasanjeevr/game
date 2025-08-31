@@ -48,6 +48,12 @@ module.exports = defaultConfig => {
                     from: path.join(getModulePath('openblock-gui'), 'static'),
                     to: 'static'
                 }]),
+                // Copy all SVG/PNG assets from GUI components so icons render properly
+                new CopyWebpackPlugin([{
+                    from: '**/*.{svg,png}',
+                    context: path.join(getModulePath('openblock-gui'), 'src', 'components'),
+                    to: 'static/components'
+                }]),
                 // Copy the VM extension worker. Use source path when dist is not present.
                 new CopyWebpackPlugin([{
                     from: 'extension-worker.js',
