@@ -33,7 +33,8 @@ const ScratchDesktopAppStateHOC = function (WrappedComponent) {
             });
         }
         render () {
-            const shouldShowTelemetryModal = (typeof ipcRenderer.sendSync('getTelemetryDidOptIn') !== 'boolean');
+            // Always suppress the telemetry modal in desktop builds
+            const shouldShowTelemetryModal = false;
 
             return (<WrappedComponent
                 isTelemetryEnabled={this.state.telemetryDidOptIn}
